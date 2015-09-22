@@ -1,0 +1,11 @@
+<label for=fader>{{year.min}} < Year < {{year.max}}</label>
+<input type=range min=1890 max=2015 ng-model="year.max" step=1 list=years>
+<input type=range min=1890 max=2015 ng-model="year.min" step=1>
+<datalist id=years>
+<option>1890</option>
+<option>1915<option>
+<option>1940</option>
+<option>1965</option>
+<option>1990</option>
+<option>2015</option>
+</datalist>

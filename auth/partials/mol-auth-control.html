@@ -1,0 +1,19 @@
+<div ng-show="!user && init" ng-click="molAuthLoginModal()" class="clickable" >
+      login/register
+</div>
+<div ng-show="user" dropdown dropdown-append-to-body>
+  Logged&nbsp;in&nbsp;as:&nbsp;<a
+      class="clickable"
+      dropdown-toggle>
+        {{user.fullname}}
+        <span class="caret"></span>
+  </a>
+  <ul role="menu" class="dropdown-menu dropdown-menu-right">
+      <li><a class="clickable"
+        href="https://auth.mol.org/profile">Profile</a></li>
+      <li><a class="clickable"
+        href="https://auth.mol.org/dashboard">Dashboard</a></li>
+      <li><a class="clickable"
+        ng-click="logout()">Log out</a></li>
+  </ul>
+</div>

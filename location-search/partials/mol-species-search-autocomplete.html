@@ -1,0 +1,14 @@
+<script type="text/ng-template" id="ac-template.html">
+	<a class="searchResult">
+		<span class="sciName" bind-html-unsafe="match.label.n | typeaheadHighlight:query"></span>
+	    <span class="commonName" bind-html-unsafe="match.label.v | typeaheadHighlight:query"></span>
+	</a>
+</script>
+
+<input type="text" class="form-control"
+	autocomplete="on"
+	ng-model="selected.value"
+	placeholder="Select a species"
+	typeahead="species.n as species for species in searchSpecies($viewValue)"
+	typeahead-on-select="selectSpecies($model)"
+	typeahead-template-url="ac-template.html">

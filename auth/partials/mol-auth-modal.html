@@ -1,0 +1,118 @@
+
+<div class="modal-header">
+  <button type="button" class="close" ng-click="close()"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+  <h3 class="omb_authTitle">
+    <a ng-click="register=0" class="clickable">Login</a> or
+    <a href="https://auth.mol.org/register" class="clickable">Sign up</a></h3>
+</div>
+  <div class="modal-body">
+      <div ng-show="!register" class="well">
+        <div class="omb_login">
+          <div class="row omb_row-sm-offset-3">
+
+            <div class="col-xs-12">
+              <form class="omb_loginForm" name="login_user_form" action="/login" autocomplete="off" method="POST">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                    <input class="form-control"
+                      id="email" name="email" placeholder="Email address"
+                      type="text" ng-model="email">
+                </div>
+                <span class="help-block"></span>
+
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                  <!-- <input  type="password" class="form-control" name="password" placeholder="Password"> -->
+                  <input class="form-control" id="password" name="password" placeholder="Password" type="password" ng-model="password">
+                </div>
+                <span class="help-block"></span>
+                <input type="hidden" name="remember" value="yes">
+
+
+              </form>
+              <button class="btn btn-lg btn-primary btn-block" ng-click="login()">Login</button>
+              </div>
+            </div>
+            <div class="row omb_row-sm-offset-3">
+              <div class="col-xs-12 col-sm-12">
+                  <input type="checkbox" ng-model="remember">&nbsp;&nbsp;Remember&nbsp;Me
+
+              </div>
+              <div class="col-xs-12 col-sm-12">
+                <p class="omb_forgotPwd">
+                  <a href="https://auth.mol.org/reset">Forgot&nbsp;password?</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
+  <!--<div ng-show="register" class="well">
+      <div style="display:none;">
+          <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                    <input class="form-control" id="email" name="email" placeholder="Email address" type="text" ng-model="email">
+              </div>
+              <span class="help-block"></span>
+              <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                <input class="form-control" id="password" name="password" placeholder="Password" type="password" ng-model="password">
+              </div>
+          <span class="help-block"></span>
+
+          <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-user"></i></span>
+              <input class="form-control" id="firstname" name="firstname" placeholder="First name" type="text" value="">
+          </div>
+          <span class="help-block"></span>
+
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-user"></i></span>
+          <input class="form-control" id="lastname" name="lastname" placeholder="Last name" type="text" value="">
+        </div>
+        <span class="help-block"></span>
+        <div class="well well-sm">
+          <script src="https://www.google.com/recaptcha/api.js"></script>
+          <div class="g-recaptcha" data-sitekey="6LfmWAATAAAAAOakDDpsMXg1YXHFSi8_wkMKatr4">
+            <div>
+              <div style="width: 304px; height: 78px;">
+                <iframe
+                  frameborder="0" hspace="0" marginheight="0" marginwidth="0"
+                  scrolling="no" tabindex="0" vspace="0" width="304"
+                  title="recaptcha widget" role="presentation" height="78"
+                  id="I0_1437404385285" name="I0_1437404385285"
+                  src="https://www.google.com/recaptcha/api2/anchor?k=6LfmWAATAAAAAOakDDpsMXg1YXHFSi8_wkMKatr4&amp;co=aHR0cHM6Ly9hdXRoLm1vbC5vcmc.&amp;hl=en&amp;v=r20150714174420&amp;size=normal&amp;usegapi=1&amp;jsh=m%3B%2F_%2Fscs%2Fapps-static%2F_%2Fjs%2Fk%3Doz.gapi.en.41KnCFQfS7I.O%2Fm%3D__features__%2Fam%3DQQ%2Frt%3Dj%2Fd%3D1%2Ft%3Dzcms%2Frs%3DAGLTcCNHma7gIPaR4pewCW-npYMudP9iog#id=I0_1437404385285&amp;parent=https%3A%2F%2Fauth.mol.org&amp;pfname=&amp;rpctoken=34189713">
+                  </iframe>
+                </div>
+                <textarea id="g-recaptcha-response"
+                  name="g-recaptcha-response" class="g-recaptcha-response"
+                  placeholder=""
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1; margin: 10px 25px; padding: 0px; resize: none;  display: none; ">
+                </textarea>
+              </div>
+            </div>
+            <noscript>
+              &lt;div style="width: 302px; height: 352px;"&gt;
+                &lt;div style="width: 302px; height: 352px; position: relative;"&gt;
+                  &lt;div style="width: 302px; height: 352px; position: absolute;"&gt;
+                    &lt;iframe src="https://www.google.com/recaptcha/api/fallback?k=6LfmWAATAAAAAOakDDpsMXg1YXHFSi8_wkMKatr4"
+                            frameborder="0" scrolling="no"
+                            style="width: 302px; height:352px; border-style: none;"&gt;
+                    &lt;/iframe&gt;
+                  &lt;/div&gt;
+                  &lt;div style="width: 250px; height: 80px; position: absolute; border-style: none;
+                              bottom: 21px; left: 25px; margin: 0px; padding: 0px; right: 25px;"&gt;
+                    &lt;textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                              class="g-recaptcha-response"
+                              style="width: 250px; height: 80px; border: 1px solid #c1c1c1;
+                                     margin: 0px; padding: 0px; resize: none;" value=""&gt;
+                    &lt;/textarea&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            </noscript>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" ng-click="register">Register</button>
+      </div>-->
+  </div>
+</div>

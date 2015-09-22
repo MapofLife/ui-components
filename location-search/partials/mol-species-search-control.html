@@ -1,0 +1,21 @@
+<table class="search"><tr>
+    <td>
+    <ui-select ng-model="groups.selected">
+          <ui-select-match class="group-label" placeholder="Select a group...">
+            {{$select.selected.label}}&nbsp;&nbsp;
+          </ui-select-match>
+          <ui-select-choices repeat="group in groups.available track by $index">
+              <div ng-bind-unsafe-html="group.label | uppercase"></div>
+              <small class="group-label">
+                  {{ group.label }}
+              </small>
+          </ui-select-choices>
+    </ui-select>
+    </td>
+    <td><span class="form-group">
+          <div ng-include="'mol-species-search-autocomplete.html'"></div>
+    </span></td>
+    <td class="hidden-xxs">
+      <button type="button" ng-click="randomSpecies()" class="random top_button btn btn-default">Pick random</button>
+    </td>
+</tr></table>

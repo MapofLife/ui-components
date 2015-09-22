@@ -1,0 +1,11 @@
+<div ng-show="species"tyle="max-height:85vh;overflow:auto">
+  <h3><b>{{species.common}}</b><h3>
+  <h4><em>{{species.scientificname}}</em></h4>
+  <p style="text-align:center;"><mol-species-images scientificname="species.scientificname"></mol-species-images></p>
+  <p style="text-align:left;"><mol-species-wiki  scientificname="species.scientificname"></mol-species-wiki></p>
+  <p><a
+    ng-show="species.scientificname"
+    ng-href="https://species.mol.org/species/map/{{species.scientificname.replace(' ','_')}}"><img
+    width="90%"
+    my-src="https://api.mol.org/map/{{species.scientificname.replace(' ','_')}}/640/640/6901f2a6-3c8d-11e5-a151-feff819cdc9f" /></a></p>
+</div>

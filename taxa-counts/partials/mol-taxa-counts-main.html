@@ -1,0 +1,30 @@
+
+<div ng-show='taxa' class="panel panel-default">
+      <div class="panel-heading">
+          <h2><i class="fa fa-table red"></i><strong>Species Groups</strong></h2>
+      </div>
+      <div class="panel-body-table allow-scroll">
+          <table class="table table-bordered table-hover table-responsive">
+              <thead>
+                  <tr>
+                      <th></th>
+                      <th>Group</th>
+                      <th>Count</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr
+                     ng-repeat="taxon in taxa | orderBy:'+taxa'"
+                     ng-class="{active: (taxon.taxa == selected)}"
+                     class="clickable"
+                     ng-click="selectTaxon(taxon)">
+                      <td><img
+                        ng-src="https://auth.mol.org/static/images/groups/{{taxon.class}}_40.png"
+                        width="40px"></td>
+                      <td>{{taxon.taxa | capitalize}}</td>
+                      <td>{{taxon.species.length}}</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>

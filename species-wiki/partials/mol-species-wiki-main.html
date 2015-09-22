@@ -1,0 +1,8 @@
+<div class="col-md-12">
+	<div class="wiki" ng-show="scientificname && wiki.content">
+		{{wiki.content}}
+	</div>
+	<div ng-show="wiki.content">
+		Source: <a ng-href="http://wikipedia.org/wiki/{{scientificname.replace(' ','_')}}">Wikipedia</a>
+	</div>
+</div>

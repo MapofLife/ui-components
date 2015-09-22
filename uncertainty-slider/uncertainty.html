@@ -1,0 +1,10 @@
+<label for=fader>Coodinate Uncertainty < {{uncertainty.max}} km</label>
+<input type=range min=0 max=1000 value=50 id=fader ng-model="uncertainty.max" step=1 list=uncertainty>
+<datalist id=uncertainty>
+<option>0</option>
+<option>200<option>
+<option>400</option>
+<option>600</option>
+<option>800</option>
+<option>1000</option>
+</datalist>
