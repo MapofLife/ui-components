@@ -3,8 +3,8 @@
         <h2><i class="fa fa-table red"></i><strong>{{taxon.taxa | capitalize}}</strong></h2>
     </div>
     <div class="panel-body-table allow-scroll">
-        <h4 ng-hide="taxon.species">There are no {{taxon.taxa}} species in the selected region.</h4>
-        <table ng-show="taxon.species" class="table table-bordered table-hover table-responsive">
+        <h4 ng-show="taxon.species.length==0">There are no {{taxon.taxa}} species in the selected region.</h4>
+        <table ng-show="taxon.species.length>0" class="table table-bordered table-hover table-responsive">
             <thead>
                 <tr>
                     <th></th>
