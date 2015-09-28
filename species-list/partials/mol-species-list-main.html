@@ -3,7 +3,8 @@
         <h2><i class="fa fa-table red"></i><strong>{{taxon.taxa | capitalize}}</strong></h2>
     </div>
     <div class="panel-body-table allow-scroll">
-        <table class="table table-bordered table-hover table-responsive">
+        <h4 ng-hide="taxon.species">There are no {{taxon.taxa}} species in the selected region.</h4>
+        <table ng-show="taxon.species" class="table table-bordered table-hover table-responsive">
             <thead>
                 <tr>
                     <th></th>
@@ -19,7 +20,7 @@
                   ng-class="{active: species.scientificname == selected}">
                     <td><img
                       ng-src="https://api.mol.org/imgstore/thumb?name={{species.scientificname}}"
-                      err-src="https://auth.mol.org/static/images/groups/{{taxon.class}}_40.png" 
+                      err-src="https://auth.mol.org/static/images/groups/{{taxon.class}}_40.png"
                        width="40px"></td>
                     <td><b>{{species.common}}</b><br><em>{{species.scientificname}}</em></td>
                 </tr>
