@@ -1,15 +1,22 @@
 angular.module('mol.region-selector', ['mol-region-selector-templates'])
-    .directive('molRegionSelector', [function() {
+    .directive('molRegionSelector', ['$modal', function($modal) {
         return {
-            restrict: 'E',
+            restrict: 'A',
             scope: {
+                modalController: '@',
                 regionType: '=',
                 regionName: '=',
                 size:       '=',
                 scrolling:  '='
             },
-            templateUrl: 'mol-region-selector.html',
             link: function(scope, element, attrs, ctrl) {
+                element.bind('click', function() {
+                    var modalInstance = $modal.open({
+                        animmation: true,
+                        templateUrl: 'mol-region-selector.html',
+                        controller: scope.modalController,
+                    });
+                });
             }
         };
     }]);
