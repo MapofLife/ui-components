@@ -7,7 +7,6 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                 location: '@molRegionSelector'
             },
             link: function(scope, element, attrs, ctrl) {
-                console.log(scope.location);
                 element.bind('click', function() {
                     var modalInstance = $modal.open({
                         animmation: true,
