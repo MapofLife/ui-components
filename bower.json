@@ -1,0 +1,26 @@
+{
+  "name": "mol-ui-components",
+  "version": "0.0.0",
+  "homepage": "https://github.com/MapofLife/ui-components",
+  "authors": [
+    "Jeremy Malczyk <jmalczyk@gmail.com>"
+  ],
+  "description": "User interface components for Map of Life web UIs",
+  "main": "",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "Map",
+    "of",
+    "Life"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
