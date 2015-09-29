@@ -4,7 +4,30 @@
         <h4 class="modal-title" id="region-selector-label">Select Region</h4>
     </div>
     <div class="modal-body">
-        Controls to select the region go here.
+        <div class="row">
+            <div class="form-group col-md-6 col-xs-12">
+                <ui-select ng-model="regionTypes.selected">
+                    <ui-select-match class="region-type-label" placeholder="Region type...">
+                        {{$select.selected.label}}&nbsp;&nbsp;
+                    </ui-select-match>
+                    <ui-select-choices repeat="regionType in regionTypes.available">
+                        <div ng-bind-unsafe-html="regionType.label"></div>
+                        <small class="region-type-label">
+                            {{ regionType.label }}
+                        </small>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group col-md-6 col-xs-12">
+                <input type="text" class="form-control"
+                	autocomplete="on"
+                	ng-model="selected.value"
+                	placeholder="Select a region"
+                	typeahead="species.n as species for species in searchSpecies($viewValue)"
+                	typeahead-on-select="selectSpecies($model)"
+                	typeahead-template-url="ac-template.html"/>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" ng-click="$close()">Cancel</button>

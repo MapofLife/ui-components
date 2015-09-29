@@ -3,15 +3,29 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
         return {
             restrict: 'A',
             scope: {
-                modalController: '@',
                 location: '@molRegionSelector'
             },
+            controller: function($scope) {
+                $scope.regionTypes = [
+                    {label: 'One', value: '1'},
+                    {label: 'Two', value: '2'}
+                ];
+                $scope.regions = [
+                    {},
+                ];
+            },
             link: function(scope, element, attrs, ctrl) {
+                console.log(scope.regionTypes);
                 element.bind('click', function() {
-                    var modalInstance = $modal.open({
+                    var modal = $modal.open({
                         animmation: true,
                         templateUrl: 'mol-region-selector.html',
-                        controller: scope.modalController,
+                        controller: function($scope) {
+                            $scope.regionTypes = {
+                                selected:  {},
+                                available: scope.regionTypes
+                            };
+                        }
                     });
                 });
             }
