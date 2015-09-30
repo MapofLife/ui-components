@@ -21,6 +21,29 @@ angular.module('mol.services', ['ngResource'])
 				}
 			}
 		])
+//Generic service for calling the MOL v0.1 API
+	.factory(
+		'MOLApiX',
+		['$http',
+			function($http) {
+				return function(service, params, canceller, loading, version) {
+					if (version === undefined ) {
+						version = '0.1';
+					}
+					loading = (typeof loading === undefined) ? false : loading;
+					return $http({
+						method:'GET',
+						url: 'http://api-beta.map-of-life.appspot.com/{0}/{1}'.format(
+							version, service),
+						params: params,
+						withCredentials: false,
+						cache: true,
+						timeout: (canceller) ? canceller.promise : undefined,
+						ignoreLoadingBar: loading
+						});
+				}
+			}
+		])
 //Gets a Wikipedia entry
 	.factory(
 		'GetWiki',
