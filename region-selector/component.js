@@ -1,4 +1,3 @@
-// Start disabled
 angular.module('mol.region-selector', ['mol-region-selector-templates'])
     .filter('to_trusted', ['$sce', function($sce){
         return function(text) {
@@ -10,41 +9,28 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
             function($modal, $http, $cookies) {
         return {
             restrict: 'A',
-            scope: {
-                location: '@molRegionSelector'
-            },
+            scope: { location: '@location' },
             controller: function($scope) {
                 $http({
-                    url:    'http://api-beta.map-of-life.appspot.com//0.x/searchregion',
+                    //url: 'http://api-beta.map-of-life.appspot.com//0.x/regiontypes',
+                    url: 'http://api-beta.map-of-life.appspot.com//0.x/searchregion',
                     method: 'GET',
                     crossDomain: true,
                     dataType: 'json',
-                    params:{
-                      'auth_token': $cookies.get('muprsns')
-                    },
-                    withCredentials: false
+                    withCredentials: false,
+                    params:{ 'auth_token': $cookies.get('muprsns') }
                 }).then(function(results) {
-                    var regionType = {};
-                    $scope.regionTypes = [];
-                    $scope.allRegions = results.data;
-                    angular.forEach(results.data, function(region) {
-                        if (! regionType[region.region_type]) {
-                            regionType[region.region_type] = 1;
-                            $scope.regionTypes.push({
-                                region_type: region.region_type,
-                                region_name: region.region_type
-                                                   .replace('_', ' ')
-                                                   .replace(/\w\S*/g, function(str) {
-                                                        return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
-                                                   })
-                            });
-                        }
-                    });
-                    $scope.regionTypes.sort(function(a, b) {
-                        return +(a.label > b.label) || +(a.label === b.label) - 1;
-                    });
-                    //$scope.regions.sort(function(a, b) {
-                    //    return +(a.label > b.label) || +(a.label === b.label) - 1;
+                    // TODO: Waiting on the new API call here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    $scope.regionTypes = [{region_type: 'mountain_region', region_type_name: 'Mountain Region'}];
+                    //angular.forEach(results.data, function(regionType) {
+                        // $scope.regionTypes.push({
+                        //     region_type: regionType.region_type,
+                        //     region_type_name: regionType.region_type
+                        //                                 .replace('_', ' ')
+                        //                                 .replace(/\w\S*/g, function(str) {
+                        //                                     return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
+                        //                                 })
+                        // });
                     //});
                 });
             },
@@ -60,17 +46,31 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                             };
                             $scope.regions = {
                                 selected:  {},
-                                available: scope.allRegions
+                                available: []
                             };
-                            $scope.regionSelected = function() {
-                                console.log($scope.regions.selected);
+                            $scope.regionSelectionComplete = function() {
+                                $scope.location = $scope.regions.selected;
+                                modal.close();
                             };
                             $scope.regionTypeSelected = function() {
-                                console.log($scope.regionTypes.selected);
+                                $scope.regions = {
+                                    selected:  {},
+                                    available: []
+                                };
+                                $http({
+                                    url: 'http://api-beta.map-of-life.appspot.com//0.x/searchregion?type=' +
+                                         $scope.regionTypes.selected.region_type,
+                                    method: 'GET',
+                                    dataType: 'json',
+                                    crossDomain: true,
+                                    withCredentials: false,
+                                    params:{ 'auth_token': $cookies.get('muprsns') }
+                                }).then(function(results) {
+                                    $scope.regions.available = results.data;
+                                });
                             };
                         }
                     });
-                    // Select button action
                 });
             }
         };

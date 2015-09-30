@@ -10,10 +10,10 @@
             <div class="form-group col-md-6 col-xs-12">
                 <ui-select autofocus ng-model="regionTypes.selected" on-select="regionTypeSelected()" class="region-selector-control">
                     <ui-select-match placeholder="Region type...">
-                        {{$select.selected.region_name}}
+                        {{$select.selected.region_type_name}}
                     </ui-select-match>
                     <ui-select-choices repeat="regionType in regionTypes.available | filter: $select.search">
-                        <small ng-bind-html="regionType.region_name | highlight: $select.search | to_trusted"></small>
+                        <small ng-bind-html="regionType.region_type_name | highlight: $select.search | to_trusted"></small>
                     </ui-select-choices>
                 </ui-select>
             </div>
@@ -22,8 +22,7 @@
                     <ui-select-match placeholder="Region...">
                         {{$select.selected.region_name}}
                     </ui-select-match>
-                    <ui-select-choices
-                        repeat="region in regions.available | filter: {region_type: regionTypes.selected.region_type} | filter: $select.search">
+                    <ui-select-choices repeat="region in regions.available | filter: $select.search">
                         <small ng-bind-html="region.region_name | highlight: $select.search | to_trusted"></small>
                     </ui-select-choices>
                 </ui-select>
@@ -31,7 +30,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" tabindex="-1" data-dismiss="modal" aria-label="Close" ng-click="$close()">Cancel</button>
-            <button type="button" ng-click="regionSelected()" class="btn btn-primary">Select</button>
+            <button type="button" ng-disabled="!regions.selected.region_name" ng-click="regionSelectionComplete()" class="btn btn-primary">Select</button>
         </div>
     </div>
 </div>
