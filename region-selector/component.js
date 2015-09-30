@@ -6,8 +6,8 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
             restrict: 'A',
             scope: { location: '@location' },
             controller: function($scope) {
-                MOLApiX('searchregion').then(function(results) {
-                    // TODO: Waiting on the new API call here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // TODO: Waiting on the new API call here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                MOLApiX('searchregion' /* 'regiontypes' */).then(function(results) {
                     $scope.regionTypes = [{region_type: 'mountain_region', region_type_name: 'Mountain Region'}];
                     //angular.forEach(results.data, function(regionType) {
                         // $scope.regionTypes.push({
@@ -27,25 +27,16 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                         animmation: true,
                         templateUrl: 'mol-region-selector.html',
                         controller: function($scope) {
-                            $scope.regionTypes = {
-                                selected:  {},
-                                available: scope.regionTypes
-                            };
-                            $scope.regions = {
-                                selected:  {},
-                                available: []
-                            };
+                            $scope.regions = { selected: {}, available: [] };
+                            $scope.regionTypes = { selected:  {}, available: scope.regionTypes };
                             $scope.regionSelectionComplete = function() {
                                 $scope.location = $scope.regions.selected;
                                 modal.close();
                             };
                             $scope.regionTypeSelected = function() {
-                                $scope.regions = {
-                                    selected:  {},
-                                    available: []
-                                };
+                                $scope.regions = { selected:  {}, available: [] };
                                 MOLApiX('searchregion',
-                                        {type: $scope.regionTypes.selected.region_type}
+                                        { type: $scope.regionTypes.selected.region_type }
                                 ).then(function(results) {
                                      $scope.regions.available = results.data;
                                 });
