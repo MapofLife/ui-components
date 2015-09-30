@@ -1,5 +1,10 @@
 // Start disabled
 angular.module('mol.region-selector', ['mol-region-selector-templates'])
+    .filter('to_trusted', ['$sce', function($sce){
+        return function(text) {
+            return $sce.trustAsHtml(text);
+        };
+    }])
     .directive('molRegionSelector', [
             '$modal', '$http', '$cookies',
             function($modal, $http, $cookies) {
@@ -26,8 +31,12 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                         if (! regionType[region.region_type]) {
                             regionType[region.region_type] = 1;
                             $scope.regionTypes.push({
-                                region_name: region.region_type.replace('_', ' '),
-                                region_type: region.region_type
+                                region_type: region.region_type,
+                                region_name: region.region_type
+                                                   .replace('_', ' ')
+                                                   .replace(/\w\S*/g, function(str) {
+                                                        return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
+                                                   })
                             });
                         }
                     });
@@ -37,8 +46,6 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                     //$scope.regions.sort(function(a, b) {
                     //    return +(a.label > b.label) || +(a.label === b.label) - 1;
                     //});
-                    // Sort regions
-                    // Enable the control
                 });
             },
             link: function(scope, element, attrs, ctrl) {
