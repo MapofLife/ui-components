@@ -58,4 +58,8 @@ angular.module('mol.filters', []).
       return input.substring(0,1).toUpperCase()+input.substring(1);
     } else { return null}
   }
-});
+}).filter('to_trusted', ['$sce', function($sce){
+    return function(text) {
+        return $sce.trustAsHtml(text);
+    };
+}]);

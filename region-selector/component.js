@@ -1,12 +1,7 @@
 angular.module('mol.region-selector', ['mol-region-selector-templates'])
-    .filter('to_trusted', ['$sce', function($sce){
-        return function(text) {
-            return $sce.trustAsHtml(text);
-        };
-    }])
     .directive('molRegionSelector', [
-            '$modal', '$http', '$cookies',
-            function($modal, $http, $cookies) {
+            '$modal', '$http', '$cookies', 'MOLApiX',
+            function($modal, $http, $cookies, MOLApiX) {
         return {
             restrict: 'A',
             scope: { location: '@location' },
