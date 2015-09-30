@@ -1,21 +1,47 @@
+// Start disabled
 angular.module('mol.region-selector', ['mol-region-selector-templates'])
-    .directive('molRegionSelector', ['$modal', function($modal) {
+    .directive('molRegionSelector', [
+            '$modal', '$http', '$cookies',
+            function($modal, $http, $cookies) {
         return {
             restrict: 'A',
             scope: {
                 location: '@molRegionSelector'
             },
             controller: function($scope) {
-                $scope.regionTypes = [
-                    {label: 'One', value: '1'},
-                    {label: 'Two', value: '2'}
-                ];
-                $scope.regions = [
-                    {},
-                ];
+                $http({
+                    url:    'http://api-beta.map-of-life.appspot.com//0.x/searchregion',
+                    method: 'GET',
+                    crossDomain: true,
+                    dataType: 'json',
+                    params:{
+                      'auth_token': $cookies.get('muprsns')
+                    },
+                    withCredentials: false
+                }).then(function(results) {
+                    var regionType = {};
+                    $scope.regionTypes = [];
+                    $scope.allRegions = results.data;
+                    angular.forEach(results.data, function(region) {
+                        if (! regionType[region.region_type]) {
+                            regionType[region.region_type] = 1;
+                            $scope.regionTypes.push({
+                                region_name: region.region_type.replace('_', ' '),
+                                region_type: region.region_type
+                            });
+                        }
+                    });
+                    $scope.regionTypes.sort(function(a, b) {
+                        return +(a.label > b.label) || +(a.label === b.label) - 1;
+                    });
+                    //$scope.regions.sort(function(a, b) {
+                    //    return +(a.label > b.label) || +(a.label === b.label) - 1;
+                    //});
+                    // Sort regions
+                    // Enable the control
+                });
             },
             link: function(scope, element, attrs, ctrl) {
-                console.log(scope.regionTypes);
                 element.bind('click', function() {
                     var modal = $modal.open({
                         animmation: true,
@@ -25,8 +51,19 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                                 selected:  {},
                                 available: scope.regionTypes
                             };
+                            $scope.regions = {
+                                selected:  {},
+                                available: scope.allRegions
+                            };
+                            $scope.regionSelected = function() {
+                                console.log($scope.regions.selected);
+                            };
+                            $scope.regionTypeSelected = function() {
+                                console.log($scope.regionTypes.selected);
+                            };
                         }
                     });
+                    // Select button action
                 });
             }
         };

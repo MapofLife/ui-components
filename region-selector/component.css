@@ -1,1 +1,5 @@
 /* some css */
+.region-selector-control .form-control {
+    width: 100%;
+    max-width: 100%;
+}
