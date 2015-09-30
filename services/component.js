@@ -26,9 +26,9 @@ angular.module('mol.services', ['ngResource'])
 		'MOLApiX',
 		['$http',
 			function($http) {
-				return function(service, params, canceller, loading, version) {
+				return function(service, params, version, canceller, loading) {
 					if (version === undefined ) {
-						version = '0.1';
+						version = '0.x';
 					}
 					loading = (typeof loading === undefined) ? false : loading;
 					return $http({
