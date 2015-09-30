@@ -1,20 +1,12 @@
 angular.module('mol.region-selector', ['mol-region-selector-templates'])
     .directive('molRegionSelector', [
             '$modal', '$http', '$cookies', 'MOLApiX',
-            function($modal, $http, $cookies, MOLApiX) {
+    function($modal,   $http,   $cookies,   MOLApiX) {
         return {
             restrict: 'A',
             scope: { location: '@location' },
             controller: function($scope) {
-                $http({
-                    //url: 'http://api-beta.map-of-life.appspot.com//0.x/regiontypes',
-                    url: 'http://api-beta.map-of-life.appspot.com//0.x/searchregion',
-                    method: 'GET',
-                    crossDomain: true,
-                    dataType: 'json',
-                    withCredentials: false,
-                    params:{ 'auth_token': $cookies.get('muprsns') }
-                }).then(function(results) {
+                MOLApiX('searchregion').then(function(results) {
                     // TODO: Waiting on the new API call here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     $scope.regionTypes = [{region_type: 'mountain_region', region_type_name: 'Mountain Region'}];
                     //angular.forEach(results.data, function(regionType) {
@@ -52,16 +44,10 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                                     selected:  {},
                                     available: []
                                 };
-                                $http({
-                                    url: 'http://api-beta.map-of-life.appspot.com//0.x/searchregion?type=' +
-                                         $scope.regionTypes.selected.region_type,
-                                    method: 'GET',
-                                    dataType: 'json',
-                                    crossDomain: true,
-                                    withCredentials: false,
-                                    params:{ 'auth_token': $cookies.get('muprsns') }
-                                }).then(function(results) {
-                                    $scope.regions.available = results.data;
+                                MOLApiX('searchregion',
+                                        {type: $scope.regionTypes.selected.region_type}
+                                ).then(function(results) {
+                                     $scope.regions.available = results.data;
                                 });
                             };
                         }
