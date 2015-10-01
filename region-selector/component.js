@@ -10,7 +10,7 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
             controller: function($scope) {
                 //MOLApiX('regiontypes').then(function(results) {
                     //$scope.regionTypes = results.data;
-                    $scope.regionTypes = [{region_type: 'mountain_region', region_type_name: 'Mountain Region'}];
+                    $scope.regionTypes = [{type: 'mountain_region', name: 'Mountain Region'}];
                 //});
             },
             link: function(scope, element, attrs, ctrl) {
@@ -23,14 +23,9 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
 
                             $scope.regionSelectionComplete = function() {
                                 if ($scope.regionRecord) {
-                                    scope.region = {
-                                        regionId: $scope.regionRecord.region_type,
-                                        regionName: $scope.regionRecord.region_name,
-                                        regionType: $scope.regionRecord.region_type,
-                                        extent: $scope.regionRecord.extent
-                                    };
+                                    scope.region = $scope.regionRecord;
                                 } else if ($scope.regionType) {
-                                    scope.region = { regionType: $scope.regionType.region_type };
+                                    scope.region = { region_type: $scope.regionType.type };
                                 }
                                 //console.log(scope.region);
                                 modal.close();
@@ -42,9 +37,9 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
 
                             $scope.searchRegion = function(text) {
                                 $scope.regionRecord = undefined;
-                                var region_type = $scope.regionType ? $scope.regionType.region_type : undefined;
+                                var type = $scope.regionType ? $scope.regionType.type : undefined;
                                 return MOLApiX('searchregion',
-                                    { type: region_type, name: text }
+                                    { type: type, name: text }
                                 ).then(
                                     function(results) { return results.data; }
                                 );

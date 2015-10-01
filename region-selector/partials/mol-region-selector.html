@@ -10,10 +10,10 @@
             <div class="form-group col-md-6 col-xs-12">
                 <ui-select autofocus ng-model="$parent.regionType">
                     <ui-select-match allow-clear placeholder="Select a Region Type">
-                        {{$select.selected.region_type_name}}
+                        {{$select.selected.name}}
                     </ui-select-match>
                     <ui-select-choices repeat="reg in regionTypes | filter: $select.search">
-                        <small ng-bind-html="reg.region_type_name | highlight: $select.search | to_trusted"></small>
+                        <small ng-bind-html="reg.name | highlight: $select.search | to_trusted"></small>
                     </ui-select-choices>
                 </ui-select>
             </div>
