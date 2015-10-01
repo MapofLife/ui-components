@@ -23,10 +23,16 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
 
                             $scope.regionSelectionComplete = function() {
                                 if ($scope.regionRecord) {
-                                    scope.region = $scope.regionRecord;
+                                    scope.region = {
+                                        regionId: $scope.regionRecord.region_type,
+                                        regionName: $scope.regionRecord.region_name,
+                                        regionType: $scope.regionRecord.region_type,
+                                        extent: $scope.regionRecord.extent
+                                    };
                                 } else if ($scope.regionType) {
-                                    scope.region = { region_type: $scope.regionType.region_type };
+                                    scope.region = { regionType: $scope.regionType.region_type };
                                 }
+                                //console.log(scope.region);
                                 modal.close();
                             };
 
