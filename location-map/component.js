@@ -131,6 +131,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
               $scope.layers.overlays.region = {
                 visible: false
               };
+              $scope.region = {}; // reset the region 
 
             }
           },true
@@ -149,7 +150,6 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                           }
                       }).then(
                           function(result, status, headers, config) {
-                              console.log(result);
                               $scope.layers.overlays.region = {
                                   type: "xyz",
                                   url: "//d3dvrpov25vfw0.cloudfront.net/api/v1/map/{0}/{z}/{x}/{y}.png"
