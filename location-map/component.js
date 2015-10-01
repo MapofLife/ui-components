@@ -1,7 +1,13 @@
 angular.module('mol.location-map',['mol-location-map-templates'])
+    .factory('molLocationMapAPI', function() {
+    return {
+        region: null,
+        location: null
+    }
+})
   .directive('molLocationMap', [
-    'MOLApiX','$state','$http','leafletData', 'leafletBoundsHelpers',
-    function(MOLApiX, $state,$http, leafletData, leafletBoundsHelpers) {
+    'MOLApiX','$state','$http', 'molLocationMapAPI','leafletData', 'leafletBoundsHelpers',
+    function(MOLApiX, $state,$http, molLocationMapAPI, leafletData, leafletBoundsHelpers) {
 
     return {
       restrict: 'AE',
@@ -27,6 +33,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
           }
         );});
 
+        $scope.api = molLocationMapAPI;
         $scope.markers = {};
         $scope.defaults = {
           scrollWheelZoom: false
@@ -168,6 +175,13 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                   }
               },true
           );
+
+          $scope.$watch('api.region', function (region, oldValue) {
+              if(region !== undefined && region != null ) {
+                  $scope.setRegion(region);
+                  $state.transitionTo('location.place', {placename: region.region_id});
+              }
+          });
 
        $scope.$on("leafletDirectiveMap.click", function(event, args){
            var leafEvent = args.leafletEvent;
