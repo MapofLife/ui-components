@@ -3,7 +3,7 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
         return {
             restrict: 'A',
             scope: {
-                region: '=region'
+                region: '=region',
                 width: '=width',
                 height: '=height'
             },
@@ -19,7 +19,7 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                         animmation: true,
                         templateUrl: 'mol-region-selector.html',
                         controller: function($scope) {
-                            $scope.regionTypes =  scope.regionTypes;
+                            $scope.regionTypes = scope.regionTypes;
 
                             $scope.regionSelectionComplete = function() {
                                 if ($scope.regionRecord) {
@@ -37,8 +37,11 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                             $scope.searchRegion = function(text) {
                                 $scope.regionRecord = undefined;
                                 var region_type = $scope.regionType ? $scope.regionType.region_type : undefined;
-                                return MOLApiX('searchregion', { type: region_type, name: text }
-                                ).then(function(results) { return results.data; });
+                                return MOLApiX('searchregion',
+                                    { type: region_type, name: text }
+                                ).then(
+                                    function(results) { return results.data; }
+                                );
                             };
                         }
                     });
