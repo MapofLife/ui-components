@@ -146,6 +146,10 @@ angular.module('mol.location-map',['mol-location-map-templates'])
 
                   console.log("Region watch has been triggered");
 
+                  if (region.region_type !== undefined) {
+                      $scope.setRegion(region);
+                  }
+
                   if (region.regionId !== undefined) {
                     // case 1
                       console.log("Region watch case 1 has been triggered");
