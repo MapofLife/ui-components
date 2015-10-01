@@ -1,25 +1,17 @@
 angular.module('mol.region-selector', ['mol-region-selector-templates'])
-    .directive('molRegionSelector', [
-            '$modal', '$http', '$cookies', 'molLocationMapAPI', 'MOLApiX',
-    function($modal,   $http,   $cookies, molLocationMapAPI,   MOLApiX) {
+    .directive('molRegionSelector', ['$modal', 'MOLApiX', function($modal, MOLApiX) {
         return {
             restrict: 'A',
-            scope: { location: '@location' },
+            scope: {
+                region: '=region'
+                width: '=width',
+                height: '=height'
+            },
             controller: function($scope) {
-                // TODO: Waiting on the new API call here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                MOLApiX('searchregion' /* 'regiontypes' */).then(function(results) {
+                //MOLApiX('regiontypes').then(function(results) {
+                    //$scope.regionTypes = results.data;
                     $scope.regionTypes = [{region_type: 'mountain_region', region_type_name: 'Mountain Region'}];
-                    //angular.forEach(results.data, function(regionType) {
-                        // $scope.regionTypes.push({
-                        //     region_type: regionType.region_type,
-                        //     region_type_name: regionType.region_type
-                        //                                 .replace('_', ' ')
-                        //                                 .replace(/\w\S*/g, function(str) {
-                        //                                     return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
-                        //                                 })
-                        // });
-                    //});
-                });
+                //});
             },
             link: function(scope, element, attrs, ctrl) {
                 element.bind('click', function() {
@@ -27,20 +19,26 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                         animmation: true,
                         templateUrl: 'mol-region-selector.html',
                         controller: function($scope) {
-                            $scope.regions = { selected: {}, available: [] };
-                            $scope.regionTypes = { selected:  {}, available: scope.regionTypes };
+                            $scope.regionTypes =  scope.regionTypes;
+
                             $scope.regionSelectionComplete = function() {
-                                $scope.location = $scope.regions.selected;
-                                molLocationMapAPI.region = $scope.regions.selected;
+                                if ($scope.regionRecord) {
+                                    $scope.region = $scope.regionRecord;
+                                } else if ($scope.regionType) {
+                                    $scope.region = { region_type: $scope.regionType.region_type };
+                                }
                                 modal.close();
                             };
-                            $scope.regionTypeSelected = function() {
-                                $scope.regions = { selected:  {}, available: [] };
-                                MOLApiX('searchregion',
-                                        { type: $scope.regionTypes.selected.region_type }
-                                ).then(function(results) {
-                                     $scope.regions.available = results.data;
-                                });
+
+                            $scope.regionSelected = function($item) {
+                                $scope.regionRecord = $item;
+                            };
+
+                            $scope.searchRegion = function(text) {
+                                $scope.regionRecord = undefined;
+                                var region_type = $scope.regionType ? $scope.regionType.region_type : undefined;
+                                return MOLApiX('searchregion', { type: region_type, name: text }
+                                ).then(function(results) { return results.data; });
                             };
                         }
                     });

@@ -5,32 +5,32 @@
         </button>
         <h4 class="modal-title">Select Region</h4>
     </div>
-    <div class="modal-body">
+    <div class="modal-body region-selector">
         <div class="row">
             <div class="form-group col-md-6 col-xs-12">
-                <ui-select autofocus ng-model="regionTypes.selected" on-select="regionTypeSelected()" class="region-selector-control">
-                    <ui-select-match allow-clear placeholder="Region type...">
+                <ui-select autofocus ng-model="$parent.regionType">
+                    <ui-select-match allow-clear placeholder="Select a Region Type">
                         {{$select.selected.region_type_name}}
                     </ui-select-match>
-                    <ui-select-choices repeat="regionType in regionTypes.available | filter: $select.search">
-                        <small ng-bind-html="regionType.region_type_name | highlight: $select.search | to_trusted"></small>
+                    <ui-select-choices repeat="reg in regionTypes | filter: $select.search">
+                        <small ng-bind-html="reg.region_type_name | highlight: $select.search | to_trusted"></small>
                     </ui-select-choices>
                 </ui-select>
             </div>
             <div class="form-group col-md-6 col-xs-12">
-                <ui-select ng-model="regions.selected" class="region-selector-control">
-                    <ui-select-match allow-clear placeholder="Region...">
-                        {{$select.selected.region_name}}
-                    </ui-select-match>
-                    <ui-select-choices repeat="region in regions.available | filter: $select.search">
-                        <small ng-bind-html="region.region_name | highlight: $select.search | to_trusted"></small>
-                    </ui-select-choices>
-                </ui-select>
+                <input type="text" class="form-control"
+                	autocomplete="on"
+                	ng-model="regionName.value"
+                	placeholder="Select a Region"
+                	typeahead="reg.region_name for reg in searchRegion($viewValue)"
+                	typeahead-on-select="regionSelected($item)">
             </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" tabindex="-1" data-dismiss="modal" aria-label="Close" ng-click="$close()">Cancel</button>
-            <button type="button" ng-disabled="!regions.selected.region_type" ng-click="regionSelectionComplete()" class="btn btn-primary">Select</button>
+            <button type="button" ng-click="regionSelectionComplete()"
+                ng-disabled="!(regionRecord || regionType)"
+                class="btn btn-primary">Select</button>
         </div>
     </div>
 </div>

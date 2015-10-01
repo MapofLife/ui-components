@@ -1,7 +1,7 @@
 (function () {
     // component.min.css
     var cssText = "" +
-".region-selector-control .form-control{width:100%;max-width:100%}";
+".region-selector .form-control{width:100%;max-width:100%}";
     // cssText end
 
     var styleEl = document.createElement("style");

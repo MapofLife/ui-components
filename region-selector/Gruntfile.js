@@ -70,5 +70,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('default', ['html2js','cssmin','css2js','uglify']);
+  grunt.registerTask('default', ['cssmin','css2js','html2js','uglify']);
 };
