@@ -1,7 +1,7 @@
 angular.module('mol.region-selector', ['mol-region-selector-templates'])
     .directive('molRegionSelector', [
-            '$modal', '$http', '$cookies', 'MOLApiX',
-    function($modal,   $http,   $cookies,   MOLApiX) {
+            '$modal', '$http', '$cookies', 'molLocationMapAPI', 'MOLApiX',
+    function($modal,   $http,   $cookies, molLocationMapAPI,   MOLApiX) {
         return {
             restrict: 'A',
             scope: { location: '@location' },
@@ -31,6 +31,7 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                             $scope.regionTypes = { selected:  {}, available: scope.regionTypes };
                             $scope.regionSelectionComplete = function() {
                                 $scope.location = $scope.regions.selected;
+                                molLocationMapAPI.region = $scope.regions.selected;
                                 modal.close();
                             };
                             $scope.regionTypeSelected = function() {
