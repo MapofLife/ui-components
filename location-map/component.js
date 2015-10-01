@@ -1,18 +1,12 @@
 angular.module('mol.location-map',['mol-location-map-templates'])
-    .factory('molLocationMapAPI', function() {
-    return {
-        region: null,
-        location: null
-    }
-})
   .directive('molLocationMap', [
-    'MOLApiX','$state','$http', 'molLocationMapAPI','leafletData', 'leafletBoundsHelpers',
-    function(MOLApiX, $state,$http, molLocationMapAPI, leafletData, leafletBoundsHelpers) {
+    'MOLApiX','$state','$http','leafletData', 'leafletBoundsHelpers',
+    function(MOLApiX, $state,$http, leafletData, leafletBoundsHelpers) {
 
     return {
       restrict: 'AE',
       scope: {
-        location: '=location',
+        region: '=region',
         width: '=width',
         height: '=height'
       },
@@ -33,7 +27,6 @@ angular.module('mol.location-map',['mol-location-map-templates'])
           }
         );});
 
-        $scope.api = molLocationMapAPI;
         $scope.markers = {};
         $scope.defaults = {
           scrollWheelZoom: false
@@ -44,7 +37,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                 zoom: 2
               };
         $scope.paths = {};
-        $scope.location = {};
+        //$scope.location = {};
         $scope.region = {};
         $scope.bounds = {};
         $scope.layers = {
@@ -75,7 +68,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
         };
 
         $scope.setLocation = function(location) {
-          $scope.location = {
+          $scope.region = {
             lat: parseFloat(location.lat),
             lng: parseFloat(location.lng),
             type: 'point'
@@ -96,51 +89,66 @@ angular.module('mol.location-map',['mol-location-map-templates'])
             };
         };
 
-        $scope.$watch(
-          'location',
-          function(location,oldValue) {
-            if(location.lat !== undefined && location.lng !== undefined) {
-              $scope.markers = {
-                list: {
-                  lat: location.lat,
-                  lng: location.lng,
-                  layer: 'shapes'
-                }
-              }
-              $scope.center =  {
-                lat: location.lat,
-                lng: location.lng,
-                zoom: 5
-              };
+        //$scope.$watch(
+        //  'location',
+        //  function(location,oldValue) {
+        //    if(location.lat !== undefined && location.lng !== undefined) {
+        //      $scope.markers = {
+        //        list: {
+        //          lat: location.lat,
+        //          lng: location.lng,
+        //          layer: 'shapes'
+        //        }
+        //      }
+        //      $scope.center =  {
+        //        lat: location.lat,
+        //        lng: location.lng,
+        //        zoom: 5
+        //      };
+        //
+        //      $scope.paths.buffer =  {
+        //            type: 'circle',
+        //            weight: 2,
+		 //               color: '#ff612f',
+        //            latlngs: {
+        //              lat: location.lat,
+        //              lng: location.lng
+        //            },
+        //            radius: 50000,
+        //            layer: 'shapes'
+        //      };
+        //
+        //      $scope.layers.overlays.shapes = {
+        //          visible: true
+        //      };
+        //      $scope.layers.overlays.region = {
+        //        visible: false
+        //      };
+        //      $scope.region = {}; // reset the region
+        //
+        //    }
+        //  },true
+        //);
 
-              $scope.paths.buffer =  {
-                    type: 'circle',
-                    weight: 2,
-		                color: '#ff612f',
-                    latlngs: {
-                      lat: location.lat,
-                      lng: location.lng
-                    },
-                    radius: 50000,
-                    layer: 'shapes'
-              };
-
-              $scope.layers.overlays.shapes = {
-                  visible: true
-              };
-              $scope.layers.overlays.region = {
-                visible: false
-              };
-              $scope.region = {}; // reset the region 
-
-            }
-          },true
-        );
-
+          /**
+           * case 1:
+           *   if regionId available, draw layer with selected region
+           * case 2
+           *   if lat and lng available, draw a point with a radius
+           * case 3:
+           *   if geojson available, draw the geojson polygon (future)
+           * case 4:
+           *   if regionType (only) available, draw all regions for that type
+           */
           $scope.$watch(
               'region',
               function(region, oldValue) {
+
+                  console.log("Region watch has been triggered");
+
                   if (region.regionId !== undefined) {
+                    // case 1
+                      console.log("Region watch case 1 has been triggered");
                       $http({
                           "withCredentials": false,
                           "method": "POST",
@@ -172,16 +180,81 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                               $scope.bounds = $scope.region.bounds;
                           }
                       );
+                  } else if(region.lat !== undefined && region.lng !== undefined) {
+                      // case 2
+                      console.log("Region watch case 2 has been triggered");
+                      $scope.markers = {
+                        list: {
+                          lat: region.lat,
+                          lng: region.lng,
+                          layer: 'shapes'
+                        }
+                      };
+                      $scope.center =  {
+                        lat: region.lat,
+                        lng: region.lng,
+                        zoom: 5
+                      };
+
+                      $scope.paths.buffer =  {
+                            type: 'circle',
+                            weight: 2,
+                                color: '#ff612f',
+                            latlngs: {
+                              lat: region.lat,
+                              lng: region.lng
+                            },
+                            radius: 50000,
+                            layer: 'shapes'
+                      };
+
+                      $scope.layers.overlays.shapes = {
+                          visible: true
+                      };
+                      $scope.layers.overlays.region = {
+                        visible: false
+                      };
+                    } else if (region.geojson !== undefined) {
+                      // case 3
+                      console.log("Region watch case 3 has been triggered");
+                    } else if (region.regionType !== undefined) {
+                      // case 4
+                      console.log("Region watch case 4 has been triggered");
+                      $http({
+                          "withCredentials": false,
+                          "method": "POST",
+                          "url": "https://mol.cartodb.com/api/v1/map/named/display_region",
+                          "data": {
+                              "type": region.regionType
+                          }
+                      }).then(
+                          function(result, status, headers, config) {
+                              $scope.layers.overlays.region = {
+                                  type: "xyz",
+                                  url: "//d3dvrpov25vfw0.cloudfront.net/api/v1/map/{0}/{z}/{x}/{y}.png"
+                                      .format(result.data.layergroupid),
+                                  layerOptions: {
+                                      attribution: '©2015 Map of Life',
+                                      continuousWorld: false
+                                  },
+                                  name: 'display_region',
+                                  opacity: 0.8,
+                                  refresh: true,
+                                  doRefresh: true,
+                                  errorTileUrl: '/app/img/blank_tile.png',
+                                  visible: true
+                              };
+
+                              $scope.layers.overlays.shapes = {
+                                  visible: false
+                              };
+                              $scope.bounds = $scope.region.bounds;
+                          }
+                      );
+
                   }
               },true
           );
-
-          $scope.$watch('api.region', function (region, oldValue) {
-              if(region !== undefined && region != null ) {
-                  $scope.setRegion(region);
-                  $state.transitionTo('location.place', {placename: region.region_id});
-              }
-          });
 
        $scope.$on("leafletDirectiveMap.click", function(event, args){
            var leafEvent = args.leafletEvent;
@@ -199,12 +272,16 @@ angular.module('mol.location-map',['mol-location-map-templates'])
 
            var placename = $state.params.placename;
            if (placename == parseInt(placename)) {
-              MOLApiX('searchregion', {regionid: placename})
-                  .then(
-                  function(response) {
-                      $scope.setRegion(response.data[0]);
-                  }
-              );
+               MOLApiX('searchregion', {regionid: placename})
+                   .then(
+                   function (response) {
+                       $scope.setRegion(response.data[0]);
+                   }
+               );
+           } else if (placename == 'mountain_region') {
+               $scope.region = {
+                   regionType: placename
+               }
            } else {
               MOLApiX('searchregion', {name: placename})
                   .then(
