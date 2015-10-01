@@ -199,32 +199,39 @@ angular.module('mol.location-map',['mol-location-map-templates'])
 
            var placename = $state.params.placename;
            if (placename == parseInt(placename)) {
-              MOLApiX('searchregion', {regionid: placename}, '0.x')
+              MOLApiX('searchregion', {regionid: placename})
                   .then(
                   function(response) {
                       $scope.setRegion(response.data[0]);
                   }
               );
            } else {
-             $http({
-                 url: 'http://nominatim.openstreetmap.org/search',
-                 method: 'GET',
-                 params: {
-                   q: placename.replace(/_/g,''),
-                   format: 'json'
-                 },
-                 withCredentials: false
-             }).then(
-               function(response) {
-                 try{
-                   var location = {
-                     lat: response.data[0].lat,
-                     lng: response.data[0].lon
-                  };
-                   $scope.setLocation(location);
-                 } catch(e) {}
-               }
-             );
+              MOLApiX('searchregion', {name: placename})
+                  .then(
+                  function(response) {
+                      $scope.setRegion(response.data[0]);
+                  }
+              );
+
+             //$http({
+             //    url: 'http://nominatim.openstreetmap.org/search',
+             //    method: 'GET',
+             //    params: {
+             //      q: placename.replace(/_/g,''),
+             //      format: 'json'
+             //    },
+             //    withCredentials: false
+             //}).then(
+             //  function(response) {
+             //    try{
+             //      var location = {
+             //        lat: response.data[0].lat,
+             //        lng: response.data[0].lon
+             //     };
+             //      $scope.setLocation(location);
+             //    } catch(e) {}
+             //  }
+             //);
            }
        }
 
