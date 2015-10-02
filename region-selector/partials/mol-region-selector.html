@@ -22,7 +22,7 @@
                 	autocomplete="on"
                 	ng-model="regionName.value"
                 	placeholder="Select a Region"
-                	typeahead="reg.region_name for reg in searchRegion($viewValue)"
+                	typeahead="reg.name for reg in searchRegion($viewValue)"
                 	typeahead-on-select="regionSelected($item)">
             </div>
         </div>

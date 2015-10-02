@@ -25,7 +25,7 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                                 if ($scope.regionRecord) {
                                     scope.region = $scope.regionRecord;
                                 } else if ($scope.regionType) {
-                                    scope.region = { region_type: $scope.regionType.type };
+                                    scope.region = { type: $scope.regionType.type };
                                 }
                                 //console.log(scope.region);
                                 modal.close();
