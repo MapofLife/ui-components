@@ -37,7 +37,6 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                 zoom: 2
               };
         $scope.paths = {};
-        //$scope.location = {};
         $scope.region = {};
         $scope.bounds = {};
         $scope.layers = {
@@ -67,68 +66,20 @@ angular.module('mol.location-map',['mol-location-map-templates'])
           }
         };
 
-        $scope.setLocation = function(location) {
-          $scope.region = {
-            lat: parseFloat(location.lat),
-            lng: parseFloat(location.lng),
-            type: 'point'
-          }
+        $scope.setRegion = function(region) {
+            var theBounds = getBounds(region);
+            region = angular.extend(region, {
+                bounds: theBounds
+            });
+            $scope.region = region;
         };
 
-        $scope.setRegion = function(region) {
-            var theBounds = leafletBoundsHelpers.createBoundsFromArray([
+          function getBounds(region) {
+              return leafletBoundsHelpers.createBoundsFromArray([
                 [region.extent.coordinates[0][2][1], region.extent.coordinates[0][2][0]],
                 [region.extent.coordinates[0][0][1], region.extent.coordinates[0][0][0]]
             ]);
-            $scope.region = {
-                regionName: region.region_name,
-                regionType: region.region_type,
-                regionId: region.region_id,
-                bounds: theBounds,
-                type: 'polygon'
-            };
-        };
-
-        //$scope.$watch(
-        //  'location',
-        //  function(location,oldValue) {
-        //    if(location.lat !== undefined && location.lng !== undefined) {
-        //      $scope.markers = {
-        //        list: {
-        //          lat: location.lat,
-        //          lng: location.lng,
-        //          layer: 'shapes'
-        //        }
-        //      }
-        //      $scope.center =  {
-        //        lat: location.lat,
-        //        lng: location.lng,
-        //        zoom: 5
-        //      };
-        //
-        //      $scope.paths.buffer =  {
-        //            type: 'circle',
-        //            weight: 2,
-		 //               color: '#ff612f',
-        //            latlngs: {
-        //              lat: location.lat,
-        //              lng: location.lng
-        //            },
-        //            radius: 50000,
-        //            layer: 'shapes'
-        //      };
-        //
-        //      $scope.layers.overlays.shapes = {
-        //          visible: true
-        //      };
-        //      $scope.layers.overlays.region = {
-        //        visible: false
-        //      };
-        //      $scope.region = {}; // reset the region
-        //
-        //    }
-        //  },true
-        //);
+          }
 
           /**
            * case 1:
@@ -144,21 +95,14 @@ angular.module('mol.location-map',['mol-location-map-templates'])
               'region',
               function(region, oldValue) {
 
-                  console.log("Region watch has been triggered");
-
-                  if (region.region_type !== undefined) {
-                      $scope.setRegion(region);
-                  }
-
-                  if (region.regionId !== undefined) {
+                  if (region.id !== undefined) {
                     // case 1
-                      console.log("Region watch case 1 has been triggered");
                       $http({
                           "withCredentials": false,
                           "method": "POST",
                           "url": "https://mol.cartodb.com/api/v1/map/named/display_region",
                           "data": {
-                              "regionid": region.regionId
+                              "id": region.id
                           }
                       }).then(
                           function(result, status, headers, config) {
@@ -181,12 +125,16 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                               $scope.layers.overlays.shapes = {
                                   visible: false
                               };
+                              if ($scope.region.bounds == undefined) {
+                                  $scope.region = angular.extend($scope.region, {
+                                      bounds: getBounds($scope.region)
+                                  });
+                              }
                               $scope.bounds = $scope.region.bounds;
                           }
                       );
                   } else if(region.lat !== undefined && region.lng !== undefined) {
                       // case 2
-                      console.log("Region watch case 2 has been triggered");
                       $scope.markers = {
                         list: {
                           lat: region.lat,
@@ -220,16 +168,14 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                       };
                     } else if (region.geojson !== undefined) {
                       // case 3
-                      console.log("Region watch case 3 has been triggered");
-                    } else if (region.regionType !== undefined) {
+                    } else if (region.type !== undefined) {
                       // case 4
-                      console.log("Region watch case 4 has been triggered");
                       $http({
                           "withCredentials": false,
                           "method": "POST",
                           "url": "https://mol.cartodb.com/api/v1/map/named/display_region",
                           "data": {
-                              "type": region.regionType
+                              "type": region.type
                           }
                       }).then(
                           function(result, status, headers, config) {
@@ -262,21 +208,23 @@ angular.module('mol.location-map',['mol-location-map-templates'])
 
        $scope.$on("leafletDirectiveMap.click", function(event, args){
            var leafEvent = args.leafletEvent;
-           $scope.setLocation(leafEvent.latlng);
-           $state.transitionTo(
-             'location.latlng',
-             {lat: Math.round(leafEvent.latlng.lat*1000)/1000,
-              lng: Math.round(leafEvent.latlng.lng*1000)/1000}
-           );
+           $scope.region = {
+               lat: Math.round(leafEvent.latlng.lat*1000)/1000,
+               lng: Math.round(leafEvent.latlng.lng*1000)/1000
+           };
        });
 
        if($state.params.lat && $state.params.lng) {
-         $scope.setLocation($state.params);
+           $scope.region = {
+               lat: $state.params.lat,
+               lng: $state.params.lng
+           };
+
        } else if ($state.params.placename) {
 
            var placename = $state.params.placename;
            if (placename == parseInt(placename)) {
-               MOLApiX('searchregion', {regionid: placename})
+               MOLApiX('searchregion', {id: placename})
                    .then(
                    function (response) {
                        $scope.setRegion(response.data[0]);
@@ -284,7 +232,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                );
            } else if (placename == 'mountain_region') {
                $scope.region = {
-                   regionType: placename
+                   type: placename
                }
            } else {
               MOLApiX('searchregion', {name: placename})
@@ -293,26 +241,6 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                       $scope.setRegion(response.data[0]);
                   }
               );
-
-             //$http({
-             //    url: 'http://nominatim.openstreetmap.org/search',
-             //    method: 'GET',
-             //    params: {
-             //      q: placename.replace(/_/g,''),
-             //      format: 'json'
-             //    },
-             //    withCredentials: false
-             //}).then(
-             //  function(response) {
-             //    try{
-             //      var location = {
-             //        lat: response.data[0].lat,
-             //        lng: response.data[0].lon
-             //     };
-             //      $scope.setLocation(location);
-             //    } catch(e) {}
-             //  }
-             //);
            }
        }
 
