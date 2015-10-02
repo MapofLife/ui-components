@@ -216,8 +216,8 @@ angular.module('mol.location-map',['mol-location-map-templates'])
 
        if($state.params.lat && $state.params.lng) {
            $scope.region = {
-               lat: $state.params.lat,
-               lng: $state.params.lng
+               lat: parseFloat($state.params.lat),
+               lng: parseFloat($state.params.lng)
            };
 
        } else if ($state.params.placename) {
