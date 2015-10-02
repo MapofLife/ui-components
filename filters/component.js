@@ -58,7 +58,54 @@ angular.module('mol.filters', []).
       return input.substring(0,1).toUpperCase()+input.substring(1);
     } else { return null}
   }
-}).filter('to_trusted', ['$sce', function($sce){
+})
+.filter('taxa', ['$filter', function($filter) {
+  function taxaFilter (taxa, constraints) {
+    var filtered = [];
+    if (taxa) {
+      taxa.map(
+        function(taxon) {
+          var fTaxon = taxon;
+          fTaxon.species = $filter('taxon')(taxon.species,constraints)
+          filtered.push(fTaxon)
+        }
+      );
+      return filtered;
+    } else { return null}
+  }
+  taxaFilter.$stateful = true;
+  return taxaFilter;
+}])
+.filter('taxon',['$filter',function($filter) {
+    return function(taxon,constraints) {
+      if(taxon)
+      return taxon.filter(
+        function(species) {
+            return $filter('species')(species,constraints);
+        }
+      );
+    }
+}])
+.filter('species',function(){
+  return function(species,constraints) {
+    if(species) {
+      if(
+        ((species.elev_max>=constraints.elev.min&&
+          species.elev_max<=constraints.elev.max)||
+        (species.elev_min>=constraints.elev.min&&
+          species.elev_min<=constraints.elev.max))
+        ||(species.elev_min<=constraints.elev.min&&
+          species.elev_max>=constraints.elev.max)) {
+        return species;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+})
+.filter('to_trusted', ['$sce', function($sce){
     return function(text) {
         return $sce.trustAsHtml(text);
     };

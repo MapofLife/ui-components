@@ -35,7 +35,7 @@ angular.module('mol.services', ['ngResource'])
 						method:'GET',
 						url: 'http://api-beta.map-of-life.appspot.com/{0}/{1}'.format(
 							version, service),
-						params: angular.extend(params,{"cache_buster":true,"lang":"en"}),
+						params: angular.extend(params,{"lang":"en"}),
 						withCredentials: false,
 						cache: true,
 						timeout: (canceller) ? canceller.promise : undefined,

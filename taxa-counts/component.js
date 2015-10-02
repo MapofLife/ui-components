@@ -1,15 +1,14 @@
 angular.module('mol.taxa-counts',['mol-taxa-counts-templates'])
-  .directive('molTaxaCounts', [
-    function() {
+  .directive('molTaxaCounts', ['$filter',
+    function($filter) {
     return {
       restrict: 'E',
       scope: {
-        taxon: '=taxon',
-        taxa: '=taxa',
-        lang: '=lang'
+        taxon: '=',taxa: '=',lang: '=',
+        filterBy: '='
       },
       templateUrl: 'mol-taxa-counts-main.html',
-      controller: function($scope) {
+      controller: function($scope,$filter) {
         $scope.taxa = undefined;
         $scope.selectTaxon = function(taxon) {
           $scope.taxon = taxon;

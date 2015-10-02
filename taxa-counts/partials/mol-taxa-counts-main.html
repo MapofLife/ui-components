@@ -14,7 +14,7 @@
               </thead>
               <tbody>
                   <tr
-                     ng-repeat="taxon in taxa | orderBy:'+taxa'"
+                     ng-repeat="taxon in taxa | taxa:filterBy | orderBy:'+taxa'"
                      ng-class="{active: (taxon.taxa == selected)}"
                      class="clickable"
                      ng-click="selectTaxon(taxon)">
