@@ -14,15 +14,15 @@
               </thead>
               <tbody>
                   <tr
-                     ng-repeat="taxon in taxa | taxa:filterBy | orderBy:'+taxa'"
-                     ng-class="{active: (taxon.taxa == selected)}"
+                     ng-repeat="group in groupList | orderBy:'+sortBy'"
+                     ng-class="{active: (group.taxa == selected)}"
                      class="clickable"
-                     ng-click="selectTaxon(taxon)">
+                     ng-click="selectTaxon(group)">
                       <td><img
-                        ng-src="https://auth.mol.org/static/images/groups/{{taxon.class}}_40.png"
+                        ng-src="https://auth.mol.org/static/images/groups/{{group.class}}_40.png"
                         width="40px"></td>
-                      <td>{{taxon.taxa | capitalize}}</td>
-                      <td>{{taxon.species.length}}</td>
+                      <td>{{group.taxa | capitalize}}</td>
+                      <td>{{group.species.length}}</td>
                   </tr>
               </tbody>
           </table>

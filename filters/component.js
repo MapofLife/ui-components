@@ -59,44 +59,44 @@ angular.module('mol.filters', []).
     } else { return null}
   }
 })
-.filter('taxa', ['$filter', function($filter) {
-  function taxaFilter (taxa, constraints) {
-    var filtered = [];
-    if (taxa) {
-      taxa.map(
-        function(taxon) {
-          var fTaxon = taxon;
-          fTaxon.species = $filter('taxon')(taxon.species,constraints)
-          filtered.push(fTaxon)
+.filter('taxa', ['$filter','$parse', function($filter,$parse) {
+  return function (input, constraints) {
+    if (input) {
+      return input.map(
+        function(record) {
+          return angular.extend(
+              record,
+              {"species":$filter('taxon')(record.species,constraints)}
+          );
         }
       );
-      return filtered;
-    } else { return null}
+    } else {
+      return null;
+    }
   }
-  taxaFilter.$stateful = true;
-  return taxaFilter;
 }])
 .filter('taxon',['$filter',function($filter) {
-    return function(taxon,constraints) {
-      if(taxon)
-      return taxon.filter(
-        function(species) {
-            return $filter('species')(species,constraints);
-        }
-      );
+    return function(input,constraints) {
+      if(input)
+        return input.filter(
+          function(sp) {
+              return $filter('species')(sp,constraints);
+          }
+        );
     }
 }])
 .filter('species',function(){
-  return function(species,constraints) {
-    if(species) {
+  return function(input,constraints) {
+    if(input) {
       if(
-        ((species.elev_max>=constraints.elev.min&&
-          species.elev_max<=constraints.elev.max)||
-        (species.elev_min>=constraints.elev.min&&
-          species.elev_min<=constraints.elev.max))
-        ||(species.elev_min<=constraints.elev.min&&
-          species.elev_max>=constraints.elev.max)) {
-        return species;
+        ((input.elev_max>=constraints.elev.min&&
+          input.elev_max<=constraints.elev.max)||
+        (input.elev_min>=constraints.elev.min&&
+          input.elev_min<=constraints.elev.max))
+        ||(input.elev_min<=constraints.elev.min&&
+          input.elev_max>=constraints.elev.max)||
+          (input.elev_min === null && input.elev_min == null)) {
+        return input;
       } else {
         return null;
       }

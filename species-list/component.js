@@ -4,9 +4,7 @@ angular.module('mol.species-list',['mol-species-list-templates'])
     return {
       restrict: 'E',
       scope: {
-        taxon: '=taxon',
-        species: '=species',
-        filterBy: '='
+        taxon: '=', species: '=', filterBy: '='
       },
       templateUrl: 'mol-species-list-main.html',
       controller: function($scope) {
