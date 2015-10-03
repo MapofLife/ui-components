@@ -17,13 +17,17 @@ angular.module('mol.location-map',['mol-location-map-templates'])
       },
       controller: function($scope,$state, $http, $element, leafletData, MOLApiX) {
 
-        console.log($element);
+          var theMap;
+          var utfgridClickHandled = false;
+          var showingAllRegions = false;
+          console.log($element);
         addResizeListener($element.context,
         function() {
         leafletData.getMap().then(
           function(map) {
             console.log('invalidating');
             map.invalidateSize();
+              theMap = map;
           }
         );});
 
@@ -75,10 +79,17 @@ angular.module('mol.location-map',['mol-location-map-templates'])
         };
 
           function getBounds(region) {
-              return leafletBoundsHelpers.createBoundsFromArray([
-                [region.extent.coordinates[0][2][1], region.extent.coordinates[0][2][0]],
-                [region.extent.coordinates[0][0][1], region.extent.coordinates[0][0][0]]
-            ]);
+              var northEast = L.latLng(region.extent.coordinates[0][2][1], region.extent.coordinates[0][2][0]),
+                  southWest = L.latLng(region.extent.coordinates[0][0][1], region.extent.coordinates[0][0][0]),
+                  bounds = L.latLngBounds(southWest, northEast);
+              bounds = bounds.pad(2);
+
+              var obounds = leafletBoundsHelpers.createBoundsFromArray([
+                  [bounds.getNorthEast().lat, bounds.getNorthEast().lng],
+                  [bounds.getSouthWest().lat, bounds.getSouthWest().lng]
+              ]);
+
+              return obounds;
           }
 
           /**
@@ -95,15 +106,17 @@ angular.module('mol.location-map',['mol-location-map-templates'])
               'region',
               function(region, oldValue) {
 
-                  if (region.id !== undefined) {
+                  if (region.id !== undefined && !showingAllRegions) {
                     // case 1
+                      var params = { "id": region.id };
+                      if (showingAllRegions) {
+                          angular.extend(params,{ "type": region.type });
+                      }
                       $http({
                           "withCredentials": false,
                           "method": "POST",
                           "url": "https://mol.cartodb.com/api/v1/map/named/display_region",
-                          "data": {
-                              "id": region.id
-                          }
+                          "data": params
                       }).then(
                           function(result, status, headers, config) {
                               $scope.layers.overlays.region = {
@@ -175,12 +188,13 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                           "method": "POST",
                           "url": "https://mol.cartodb.com/api/v1/map/named/display_region",
                           "data": {
-                              "type": region.type
+                              "type": region.type,
+                              "id": region.id
                           }
                       }).then(
                           function(result, status, headers, config) {
                               $scope.layers.overlays.region = {
-                                  type: "xyz",
+                                  type: "cartodbInteractive",
                                   url: "//d3dvrpov25vfw0.cloudfront.net/api/v1/map/{0}/{z}/{x}/{y}.png"
                                       .format(result.data.layergroupid),
                                   layerOptions: {
@@ -192,8 +206,13 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                                   refresh: true,
                                   doRefresh: true,
                                   errorTileUrl: '/app/img/blank_tile.png',
-                                  visible: true
+                                  visible: true,
+                                  key: result.data.layergroupid,
+                                  user: 'mol',
+                                  layer: '0'
                               };
+
+                              showingAllRegions = true;
 
                               $scope.layers.overlays.shapes = {
                                   visible: false
@@ -202,16 +221,49 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                           }
                       );
 
+                  } else {
+                      // reset state
+                      $scope.center = {
+                          lat: 0,
+                          lng: 0,
+                          zoom: 2
+                      };
+
                   }
               },true
           );
 
+          $scope.$on("leafletDirectiveMap.utfgridClick", function(event, args) {
+              utfgridClickHandled = true;
+              showingAllRegions = true;
+              if (args.data != null) {
+
+                  args.data.extent = angular.fromJson(args.data.extent);
+                  $scope.region = {
+                      id: args.data.id,
+                      name: args.data.name,
+                      type: 'mountain_region',
+                      bounds: getBounds(args.data)
+                  };
+
+                  L.popup().setLatLng(args.latlng).setContent(args.data.name).openOn(theMap);
+              }
+          });
+
        $scope.$on("leafletDirectiveMap.click", function(event, args){
+
+           if (utfgridClickHandled) {
+               utfgridClickHandled = false;
+               return;
+           }
+
            var leafEvent = args.leafletEvent;
            $scope.region = {
                lat: Math.round(leafEvent.latlng.lat*1000)/1000,
                lng: Math.round(leafEvent.latlng.lng*1000)/1000
            };
+
+           showingAllRegions = false;
        });
 
        if($state.params.lat && $state.params.lng) {
@@ -231,6 +283,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                    }
                );
            } else if (placename == 'mountain_region') {
+               showingAllRegions = true;
                $scope.region = {
                    type: placename
                }
