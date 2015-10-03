@@ -9,7 +9,7 @@ angular.module('mol.species-list-service',[])
 			this.searchRegion = function(region) {
           var defaults = {"lang":"en","radius":50000};
 					return (region.lat && region.lng) ?
-							  MOLApi('specieslist',angular.extend(region,defaults)) :
+							  MOLApiX('specieslist',angular.extend(region,defaults)) :
 				        MOLApiX('specieslist',region);
 			}
       
