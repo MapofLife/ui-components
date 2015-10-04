@@ -7,11 +7,16 @@ angular.module('mol.species-list-service',[])
    function(MOLApi,MOLApiX,$http,$state) {
 
 			this.searchRegion = function(region) {
-          var defaults = {"lang":"en","radius":50000};
+          var defaults = {"lang":"en","radius":50000},
+              remove = {"bounds":true,"extent":true},
+              config = angular.copy(region);
+              angular.forEach(
+                config,
+                function(value,key) {if(remove[key]) {delete config[key]}});
 					return (region.lat && region.lng) ?
-							  MOLApiX('specieslist',angular.extend(region,defaults)) :
-				        MOLApiX('specieslist',region);
+							  MOLApiX('specieslist',angular.extend(config,defaults)) :
+				        MOLApiX('specieslist',config);
 			}
-      
+
 
 }]);
