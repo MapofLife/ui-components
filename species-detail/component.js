@@ -4,7 +4,7 @@ angular.module('mol.species-detail',['mol-species-detail-templates'])
     return {
       restrict: 'E',
       scope: {
-        species: '&species',
+        species: '=species',
         filterBy: '='
       },
       templateUrl: 'mol-species-detail-main.html'

@@ -89,12 +89,12 @@ angular.module('mol.filters', []).
   return function(input,constraints) {
     if(input) {
       if(
-        ((input.elev_max>=constraints.elev.min&&
-          input.elev_max<=constraints.elev.max)||
-        (input.elev_min>=constraints.elev.min&&
-          input.elev_min<=constraints.elev.max))
-        ||(input.elev_min<=constraints.elev.min&&
-          input.elev_max>=constraints.elev.max)||
+        ((input.elev_max>=constraints.elevation[0]&&
+          input.elev_max<=constraints.elevation[1])||
+        (input.elev_min>=constraints.elevation[0]&&
+          input.elev_min<=constraints.elevation[1]))
+        ||(input.elev_min<=constraints.elevation[0]&&
+          input.elev_max>=constraints.elevation[1])||
           (input.elev_min === null && input.elev_min == null)) {
         return input;
       } else {
