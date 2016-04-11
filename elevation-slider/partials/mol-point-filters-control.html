@@ -1,0 +1,131 @@
+<div class="well" ng-show="initialized && histogram.histogram_values">
+  <div>
+    <b>Point filters</b>
+    <div class="histogram_totals">{{totals.combined | number}} of {{totals.total | number}} selected
+  </div>
+  <div  class="histogram_filter">
+    <checkbox class="btn-primary" ng-model="filters.uncertainty"></checkbox>
+    <b class="clickable" tooltip="
+      Spatial uncertainty of an observation, in kilometers. 20km if no uncertainty is provided with the observation.">Uncertainty</b>
+    <div class="histogram_totals">{{totals.uncertainty | number}} selected</div>
+    <!--{{_uncertainty.min | mKm }} - {{ (_uncertainty.max < 500000)? (_uncertainty.max | mKm) : 'any value' }}-->
+    <div class="histogram_container">
+      <table class="histogram"  width="100%">
+        <tr>
+          <td colspan=1></td>
+          <td  valign="bottom" colspan=2
+          ng-repeat="bucket in histogram.uncertainty_buckets | toArray">
+            <div class="bar"
+              tooltip-placement="right"
+              tooltip="{{bucket.ct | number}} point records available with a geographic uncertainty between {{bucket.min | mKm}} and {{bucket.max | mKm}}."
+              ng-style="{height:bucket.height}"></div>
+          </td>
+          <td colspan=1></td>
+        </tr>
+        <tr>
+          <td colspan=1></td>
+          <td colspan=2 halign="middle" valign="bottom"
+            ng-repeat="bucket in histogram.uncertainty_buckets | toArray">
+            <div class="tick"></div>
+          </td>
+          <td colspan=1><div class="tick"></div></td>
+        </tr>
+        <tr>
+          <td  valign="bottom" halign="middle" colspan=2
+            ng-repeat="bucket in histogram.uncertainty_buckets | toArray">
+            <div ng-class-even="'tick_label_odd'" class="tick_label">{{bucket.min/1000}}</div>
+          </td>
+          <td colspan=2><div class="tick_label">&infin;</div></td>
+        </tr>
+        <tr><td colspan="{{((histogram.uncertainty_buckets | toArray).length+1)*2+1}}">
+          <div class="sliders" range-slider show-values="false"
+                step="1" min="1" max="steps.uncertainty_bucket"
+                prevent-equal-min-max
+                ng-mouseup="updateModel()"
+                model-min="selected.uncertainty.min" model-max="selected.uncertainty.max"></div></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="histogram_filter">
+    <checkbox class="btn-primary" ng-model="filters.years"></checkbox>
+    <b>Years</b>
+    <div class="histogram_totals">{{totals.years | number}} selected</div>
+    <!--{{(_year.min>0) ? _year.min : 'Prehistoric' }} - {{(_year.max < 2015) ? _year.max : 'Present'}}-->
+    <div class="histogram_container">
+      <table class="histogram" width="100%">
+        <tr>
+          <td  valign="bottom" colspan=2>
+            <div class="bar"
+              tooltip-placement="right"
+
+              tooltip="{{histogram.year_buckets['0'].ct}} point records available with no year value."
+              ng-style="{height:histogram.year_buckets['0'].height}"></div>
+          </td>
+          <td colspan=3 halign="middle" valign="bottom">
+          </td>
+          <td colspan=2 halign="middle" valign="bottom"
+            ng-repeat="bucket in (histogram.year_buckets | toArray).splice(1)">
+            <div class="bar"
+            tooltip-placement="right"
+
+            tooltip="{{bucket.ct | number}} point records available between {{(bucket.min > 0) ? bucket.min : 'the beginning of time'}} and {{(bucket.max < 2015)?bucket.max:' the present'}}." ng-style="{height:bucket.height}"></div>
+          </td>
+          <td colspan=1></td>
+        </tr>
+        <tr>
+          <td colspan=1></td>
+          <td colspan=2 halign="middle" valign="bottom">
+            <div class="tick"></div>
+          </td>
+          <td colspan=2 halign="middle" valign="bottom">
+          </td>
+          <td colspan=2 halign="middle" valign="bottom"
+            ng-repeat="bucket in (histogram.year_buckets | toArray).slice(1)">
+            <div class="tick"></div>
+          </td>
+          <td colspan=1><div class="tick"></div></td>
+        </tr>
+        <tr>
+          <td colspan=2 halign="middle" valign="bottom">
+            <div  class="tick_label">N/A</div>
+          </td>
+          <td colspan=2 halign="middle" valign="bottom">
+          </td>
+          <td colspan=2 halign="middle"
+            ng-repeat="bucket in (histogram.year_buckets | toArray).slice(1)">
+            <div ng-class-even="'tick_label_odd'" class="tick_label">{{(bucket.min>0)? bucket.min : 'BC'}}</div>
+          </td>
+          <td colspan=2 halign="middle">
+            <div class="tick_label">Now</div>
+          </td>
+        </tr>
+        <tr>
+          <td tooltip="Check to include points with no year recorded." tooltip-placement="right" halign="middle" style="text-align:center" colspan=2>
+            <checkbox class="btn-primary"
+
+
+
+              ng-model="year.nulls"></checkbox></td>
+          <td colspan=2></td>
+          <td colspan="{{((histogram.year_buckets | toArray).length)*2+1}}">
+            <div class="sliders" range-slider show-values="false"
+                  step="1" min="1" max="steps.year_bucket-1"
+                  prevent-equal-min-max
+                  ng-mouseup="updateModel()"
+                  model-min="selected.year.min" model-max="selected.year.max"></div></td>
+        </tr>
+      </table>
+    </div>
+    <div ng-show="totals.total>5000" class="histogram_filter">
+      <checkbox class="btn-primary" ng-model="filters.limit"></checkbox>
+      Limit map to most recent {{limit}} points.
+      <div style="width:90%;margin:5px;" range-slider show-values="false"
+            step="500" min="0" max="50000"
+            pin-handle="min"
+            prevent-equal-min-max
+            ng-mouseup="updateModel()"
+            model-max="selected.limit"></div>
+    </div>
+
+  </div>
+</div>

@@ -1,16 +1,11 @@
 <table class="search"><tr>
     <td>
-    <ui-select ng-model="groups.selected">
-          <ui-select-match class="group-label" placeholder="Select a group...">
-            {{$select.selected.label}}&nbsp;&nbsp;
-          </ui-select-match>
-          <ui-select-choices repeat="group in groups.available track by $index">
-              <div ng-bind-unsafe-html="group.label | uppercase"></div>
-              <small class="group-label">
-                  {{ group.label }}
-              </small>
-          </ui-select-choices>
-    </ui-select>
+    <select class="form-control" ng-model="groups.selected">
+          <option ng-selected="groups.selected==null" value="" disabled>Select a group...</option>
+          <option ng-selected="group.value === groups.selected.value" ng-value="group" ng-repeat="group in groups.available">
+                {{ group.label | capitalize}}
+          </option>
+    </select>
     </td>
     <td><span class="form-group">
           <div ng-include="'mol-species-search-autocomplete.html'"></div>

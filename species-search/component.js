@@ -1,7 +1,7 @@
 angular.module('mol.species-search',['mol-species-search-templates'])
 .directive('speciesSearch', [
-  'MOLServices','$state','$q',
-  function(MOLServices,$state,$q) {
+  'MOLApi','$state','$q',
+  function(MOLApi,$state,$q) {
     return {
       restrict: 'E',
       scope: false,
@@ -33,9 +33,13 @@ angular.module('mol.species-search',['mol-species-search-templates'])
             selected: {},
             available:[]};
 
-        MOLServices(
-            'availabletaxa',{}, $scope.canceller, false
-          ).then(
+        MOLApi({
+           "canceller": $scope.canceller,
+           "loading": true,
+           "service" : "species/availabletaxa",
+           "version" : "0.x",
+           "creds" : true,
+        }).then(
             function(results) {
               angular.forEach(
                 results.data,
@@ -52,8 +56,8 @@ angular.module('mol.species-search',['mol-species-search-templates'])
 
         $scope.selectSpecies = function(scientificname) {
           //$scope.canceller.resolve();
-           MOLServices(
-            'speciesinfo',
+           MOLApi(
+            'species/info',
             {"name" : scientificname},
             $scope.canceller, true
           ).success(function(species) {

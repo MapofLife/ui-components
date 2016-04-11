@@ -1,7 +1,7 @@
 <script type="text/ng-template" id="ac-template.html">
 	<a class="searchResult">
-		<span class="sciName" bind-html-unsafe="match.label.n | typeaheadHighlight:query"></span>
-	    <span class="commonName" bind-html-unsafe="match.label.v | typeaheadHighlight:query"></span>
+		<span class="sciName" ng-bind-html="match.label.n | uibTypeaheadHighlight:query"></span>
+	  <span class="commonName" ng-bind-html="match.label.v | uibTypeaheadHighlight:query"></span>
 	</a>
 </script>
 
@@ -9,6 +9,6 @@
 	autocomplete="on"
 	ng-model="selected.value"
 	placeholder="Select a species"
-	typeahead="species.n as species for species in searchSpecies($viewValue)"
+	uib-typeahead="species.n as species for species in searchSpecies($viewValue)"
 	typeahead-on-select="selectSpecies($model)"
 	typeahead-template-url="ac-template.html">
