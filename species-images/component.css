@@ -1,1 +1,63 @@
 /* some css */
+
+.species-images {
+
+	display:inline-block;
+	position: relative;
+	overflow: hidden;
+	border: 1pt solid gray;
+	border-radius: 5pt;
+	overflow: hidden;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	margin: 10px;
+}
+
+
+.species-images .image-controls {
+		color: lightgray;
+		position: absolute;
+		bottom: 0;
+		width:100%;
+		background-color: rgba(0,0,0,0.5);
+		padding: 5px;
+}
+
+.species-images .image-rights {
+		color: lightgray;
+		position: absolute;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		font-size:8pt;
+		color: lightgray;
+		top: 0;
+		width:100%;
+		background-color: rgba(0,0,0,0.5);
+		padding: 5px;
+}
+
+.species-images .image-rights .copyright {
+	color: lightgray;
+}
+.species-images .voted {
+		color: #3377FF;
+}
+
+.species-images .scroller {
+	/*float: left;*/
+	padding: 1pt;
+	cursor: pointer;
+}
+
+.species-images .vote {
+	float: right;
+	padding: 1pt;
+	cursor: pointer;
+}
+
+.species-images  i {
+	cursor: pointer;
+}

@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         banner: '/*! <%= grunt.template.today("yyyy-mm-dd") %> */\n',
-        mangle: false
+        mangle: true
       },
       min: {
         files: {

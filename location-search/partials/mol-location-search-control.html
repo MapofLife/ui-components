@@ -1,0 +1,14 @@
+<table class="search"><tr>
+    <td>
+    <select class="form-control" ng-model="regionTypes.selected">
+          <option
+            ng-selected="type.id === $parent.regionTypes.selected"
+            ng-value="type.id" ng-repeat="type in regionTypes.available">
+                {{type.title | capitalize}}
+          </option>
+    </select>
+    </td>
+    <td><span class="form-group">
+          <div ng-include="'mol-location-search-autocomplete.html'"></div>
+    </span></td>
+</tr></table>

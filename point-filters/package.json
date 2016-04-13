@@ -2,14 +2,15 @@
   "name": "mol-point-filters",
   "private": true,
   "version": "0.0.0",
-  "description": "Point filters for year and uncertainty",
+  "description": "Point filters for the MOL detail map page",
   "repository": "https://github.com/MapofLife/ng-mol",
   "license": "MIT",
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-contrib-uglify": "~0.6.0",
     "grunt-contrib-cssmin": "~0.10.0",
-    "grunt-html2js": "~0.3.3"
+    "grunt-html2js": "~0.3.3",
+    "grunt-css2js": "~0.2.4"
   },
   "scripts": {
     "postinstall": "bower install"

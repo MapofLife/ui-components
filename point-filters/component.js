@@ -1,7 +1,7 @@
 angular.module('mol.point-filters',['mol-point-filters-templates'])
 .directive('pointsHistogram', [
-  'MOLServices',
-  function(MOLServices) {
+  'MOLApi','$q',
+  function(MOLApi,$q) {
     return {
       restrict: 'E',
       scope: {
@@ -13,7 +13,8 @@ angular.module('mol.point-filters',['mol-point-filters-templates'])
         limit:"=limit"
       },
       templateUrl: 'mol-point-filters-control.html',
-      controller: function($scope) {
+      controller: function($scope, $q) {
+        $scope.canceller = $q.defer();
         $scope.initialized=false;
         $scope._year = {min:1970, max:2015, nulls : false};
         $scope._uncertainty = {min:0, max:32000};
@@ -190,11 +191,12 @@ angular.module('mol.point-filters',['mol-point-filters-templates'])
           function(newValue,oldValue) {
             if(newValue) {
               $scope.initialized=false;
-              MOLServices(
-                'pointshistogram',
-                {"scientificname":newValue},
-                true
-              ).success(
+              MOLApi({
+                "service":"species/pointshistogram",
+                "params": {"scientificname":newValue},
+                "loading":true,
+                "canceller": $scope.canceller,
+              }).success(
                 function(result) {
                   $scope.histogram = result;
                   $scope.histogram.limits = {"uncertainty_bucket":1,"year_bucket":1};

@@ -1,5 +1,5 @@
 angular.module('mol.species-search',['mol-species-search-templates'])
-.directive('speciesSearch', [
+.directive('molSpeciesSearch', [
   'MOLApi','$state','$q',
   function(MOLApi,$state,$q) {
     return {
@@ -13,15 +13,18 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         //search for a new species in the search bar
         $scope.searchSpecies = function(term) {
           //$scope.canceller.resolve();
-          return MOLServices(
-            'searchspecies',
-            {
-              "term": term,
-              "group": $scope.groups.selected.value
+          var regionid = undefined;
+          try{ regionid = $scope.$parent.region.id} catch(e) {}
+          return MOLApi({
+            "service":"species/groupsearch",
+            "params" : {
+              "query": term,
+              "group": $scope.groups.selected,
+              "regionid": regionid
             },
-            $scope.canceller,
-            true
-          ).then(
+            "canceller": $scope.canceller,
+            "loading": true
+          }).then(
             function(results) {
               return results.data;
             }
@@ -30,13 +33,13 @@ angular.module('mol.species-search',['mol-species-search-templates'])
 
         //get all available taxa
         $scope.groups = {
-            selected: {},
+            selected: null,
             available:[]};
 
         MOLApi({
            "canceller": $scope.canceller,
            "loading": true,
-           "service" : "species/availabletaxa",
+           "service" : "system/availabletaxa",
            "version" : "0.x",
            "creds" : true,
         }).then(
@@ -55,23 +58,26 @@ angular.module('mol.species-search',['mol-species-search-templates'])
 
 
         $scope.selectSpecies = function(scientificname) {
-          //$scope.canceller.resolve();
-           MOLApi(
-            'species/info',
-            {"name" : scientificname},
-            $scope.canceller, true
-          ).success(function(species) {
+         if(scientificname==='') {
+           $scope.randomSpecies();
+         } else {
+           MOLApi({
+            "service":"species/habitat",
+            "params":{"id" : scientificname},
+            "canceller": $scope.canceller,
+            "loading": true
+            }).success(function(species) {
 
               if(species == undefined) return;
               if(species.prefs != undefined) {
                 if(species.prefs.habitats != undefined) {
                   var bools = [];
                     for(var i=0;i<17;i++) {bools.push(false);}
-
+                    try {
                     species.prefs.habitats.split(',').forEach(
                         function(h) {bools[parseInt(h)]=true}
                     );
-
+                  } catch(e) {}
                     species.prefs.habitats = bools;
                     if(species.prefs.tree_cover_min==100) {
                       species.prefs.tree_cover_min=50;
@@ -147,21 +153,21 @@ angular.module('mol.species-search',['mol-species-search-templates'])
               $scope.$parent.species = species;
 
             });
+          }
         };
         $scope.randomSpecies = function() {
 
-          var mode = 'randomspecies';
-
-          $scope.selected = undefined;
-          $scope.selected = MOLServices(
-            mode,
-            {
-             "group" : $scope.groups.selected.value,
-             "rand": Math.random()},
-             true
-          ).success(
+          MOLApi({
+            "service": "species/random",
+            "params": {
+             "taxogroup" : $scope.groups.selected.value,
+           },
+           "canceller": $scope.canceller,
+           "loading": true
+          }).success(
             function(species) {
-              $scope.selectSpecies(species.n);
+              $scope.groups.selected = species.taxa;
+              $scope.selectSpecies(species.scientificname);
           });
         };
 
@@ -170,10 +176,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
           function(newValue,oldValue) {
             if(newValue)  {
               var taxa = newValue.taxa||'Any group';
-              $scope.groups.selected = {
-                label: taxa,
-                value: taxa
-              };
+              $scope.groups.selected = taxa;
             }
           }
         );

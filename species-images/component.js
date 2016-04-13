@@ -1,7 +1,7 @@
 angular.module('mol.species-images',['mol-species-images-templates'])
 .directive('molSpeciesImages', [
-  '$state','$q','$timeout','$cookies','$modal','$http','GetImages',
-  function($state,$q, $timeout,$cookies,$modal, $http, GetImages) {
+  '$state','$q','$timeout','$cookies','$http','GetImages',
+  function($state,$q, $timeout,$cookies, $http,GetImages) {
 
     return {
       restrict: 'E',
@@ -11,34 +11,33 @@ angular.module('mol.species-images',['mol-species-images-templates'])
         scrolling: '=scrolling'
       },
       templateUrl: 'mol-species-images-main.html',
-      controller: function($scope,$q, $state,$timeout,$cookies,$modal) {
+      controller: function($scope,$q, $state,$timeout,$cookies) {
         $scope.canceller = $q.defer();
+        $scope.loggedIn = ($cookies.muprsns !== undefined);
         $scope.$watch(
           'scientificname',
           function(newValue,oldValue) {
             $scope.images = undefined;
-            //if(!$scope.size) {
-            //  $scope.size=80;
-            //}
+
             if(newValue == undefined) {
               return;
             }
-            GetImages(newValue,320).query(
-              function(images){
-                $scope.images = images;
+          GetImages(newValue,$scope.size || 80).query(
+              function(response){
+                $scope.images = response;
                 $scope.selectedImage = 0;
                 if($scope.scrolling)
                 $timeout(function(){$scope.scrollImage(1,true)},2000);
             });
           }
         );
+
+
         $scope.vote = function(vote) {
           //make api call for vote@asset_id
           $scope.scrolling = false;
           var currVote, newVote;
-          if(!$cookies.muprsns) {
-            $scope.loginModal();
-          } else {
+          if($cookies.muprsns) {
             currVote = $scope.images[$scope.selectedImage]["vote"];
             if( currVote == vote) {
               newVote = 0;
@@ -73,20 +72,49 @@ angular.module('mol.species-images',['mol-species-images-templates'])
             $timeout(function(){$scope.scrollImage(1, true)},5000);
           }
         }
-        $scope.loginModal = function() {
-          var modalInstance = $modal.open({
-            templateUrl: 'modal.html',
-            size: 'md',
-            controller: function($scope, $modalInstance) {
-                $scope.close = function () {
-                  $modalInstance.dismiss('cancel');
-                };
-                $scope.location =  $location.absUrl();
-              }
-            });
-        }
+
 
 
       }
     };
-}]);
+}]).factory(
+	'GetImages',
+	[
+		'$resource','$q',
+		function($resource,$q) {
+			return function(name,size) {
+				var abort = $q.defer();
+
+				return $resource(
+					'https://api.mol.org/imgstore/list',
+					{},
+					{
+						query: {
+							method:'GET',
+							origin: '*',
+							withCredentials:false,
+							params:{
+								name: name
+							},
+							ignoreLoadingBar: false,
+							isArray: true,
+							timeout: abort,
+							transformResponse : function(data, headersGetter) {
+								try {
+									var result = JSON.parse(data);
+									return result.images.map(
+            			function(v,i){
+										v.url = '{0}=s{1}-c'.format((v.url||v.asset_url),size)
+            				return v
+            			});
+								} catch (e){
+									return undefined;
+								}
+						}
+					}
+				}
+				);
+			}
+		}
+	]
+);

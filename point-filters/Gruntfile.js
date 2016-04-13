@@ -1,8 +1,12 @@
 module.exports = function(grunt) {
-
-  // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    watch: {
+      scripts: {
+        files: ['component.js','component.css','partials/*'],
+        tasks: ['html2js','cssmin','css2js','uglify']
+      }
+    },
     html2js: {
       options: {
           htmlmin: {
@@ -16,7 +20,9 @@ module.exports = function(grunt) {
             removeStyleLinkTypeAttributes: true
           },
           base: './partials',
-          module: '<%= pkg.name %>-templates'
+          module: '<%= pkg.name %>-templates',
+          singleModule: true
+
       },
       main: {
         src: ['partials/*.html'],
@@ -32,10 +38,17 @@ module.exports = function(grunt) {
         files: {
           "component.min.js": [
             "templates.js",
-            "component.js"
+            "component.js",
+            'component.min.css.js'
           ]
         }
       }
+    },
+    css2js: {
+        compile: {
+            src: 'component.min.css',
+            dest: 'component.min.css.js'
+        }
     },
     cssmin : {
       options: {
@@ -51,13 +64,11 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-css2js');
+  grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
-
-  grunt.registerTask('default', ['html2js','uglify','cssmin']);
-
-
-
+  grunt.registerTask('default', ['cssmin','css2js','html2js','uglify']);
 };

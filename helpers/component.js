@@ -59,36 +59,7 @@ angular.module('imageHelpers',[]).directive('errSrc', function() {
     }
   }
 })
-.directive("mySrc", function() {
-    return {
-      link: function(scope, element, attrs) {
-        var img, loadImage;
-        img = null;
 
-        loadImage = function() {
-
-          element[0].src = "/app/img/img-loading.gif";
-          element[0].style.display='none';
-
-          img = new Image();
-          img.src = attrs.mySrc;
-
-          img.onload = function() {
-            element[0].src = attrs.mySrc;
-              element[0].style.display='';
-          };
-        };
-
-        scope.$watch((function() {
-          return attrs.mySrc;
-        }), function(newVal, oldVal) {
-          if (oldVal !== newVal) {
-            loadImage();
-          }
-        });
-      }
-    };
-  });;
 
 (function(){
   var attachEvent = document.attachEvent;

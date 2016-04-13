@@ -10,7 +10,7 @@ angular.module('mol.api',[])
               version:  arguments[1],
               service:  arguments[2],
               params:  arguments[3],
-              canceller: arguments[4],
+              canceller: arguments[4] || {},
               loading: arguments[5],
               creds: arguments[6]
           }
