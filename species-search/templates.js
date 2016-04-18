@@ -10,5 +10,5 @@ angular.module("mol-species-search-autocomplete.html", []).run(["$templateCache"
 
 angular.module("mol-species-search-control.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("mol-species-search-control.html",
-    "<table class=search><tr><td><select class=form-control ng-model=groups.selected><option disabled>Select a group...</option><option ng-selected=\"group.value === $parent.groups.selected\" ng-value=group.value ng-repeat=\"group in groups.available\">{{ group.label | capitalize}}</option></select></td><td><span class=form-group><div ng-include=\"'mol-species-search-autocomplete.html'\"></div></span></td></tr></table>");
+    "<table class=search><tr><td><select class=form-control ng-model=groups.selected><option disabled ng-value=null>Select a group...</option><option ng-selected=\"(group.value === $parent.groups.selected)\" ng-value=group.value ng-repeat=\"group in groups.available\">{{ group.label.replace('fishs','fish') | capitalize}}</option></select></td><td><span class=form-group><div ng-include=\"'mol-species-search-autocomplete.html'\"></div></span></td></tr></table>");
 }]);

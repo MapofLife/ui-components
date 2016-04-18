@@ -1,11 +1,11 @@
 <table class="search"><tr>
     <td>
-    <select class="form-control" ng-model="groups.selected">
-          <option disabled>Select a group...</option>
+    <select class="form-control" ng-model="groups.selected"
+    >     <option disabled ng-value='null'>Select a group...</option>
           <option
-            ng-selected="group.value === $parent.groups.selected"
+            ng-selected="(group.value === $parent.groups.selected)"
             ng-value="group.value" ng-repeat="group in groups.available">
-                {{ group.label | capitalize}}
+                {{ group.label.replace('fishs','fish') | capitalize}}
           </option>
     </select>
     </td>

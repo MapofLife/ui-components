@@ -8,7 +8,7 @@ angular.module('mol.species-description',['mol-species-description-templates'])
       scope: {
         scientificname: '=scientificname',
       },
-      templateUrl: 'mol-species-images-main.html',
+      templateUrl: 'mol-species-description-main.html',
       controller: function($scope,$q, $state,$timeout,$cookies) {
         $scope.canceller = $q.defer();
         $scope.description = undefined;

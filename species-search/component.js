@@ -156,11 +156,14 @@ angular.module('mol.species-search',['mol-species-search-templates'])
           }
         };
         $scope.randomSpecies = function() {
+          var group = null;
+          try {group = $scope.groups.selected.value}
+          catch(e) {}
 
           MOLApi({
             "service": "species/random",
             "params": {
-             "taxogroup" : $scope.groups.selected.value,
+             "taxogroup" : group,
            },
            "canceller": $scope.canceller,
            "loading": true
