@@ -14,12 +14,12 @@ angular.module('mol.location-search',['mol-location-search-templates'])
 
         //get all available region types
         $scope.regionTypes = {
-            selected: null,
+            selected: undefined,
             available:[]};
 
         $scope.regions = {
             available: [],
-            selected: null
+            selected: undefined
         }
 
         MOLApi({
@@ -42,10 +42,15 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             }
           );
 
-        $scope.selectRegionType = function(type_id) {
+        $scope.selectRegionType = function(type) {
+          $state.transitionTo(
+            $state.current,
+            {"regiontype":type.name},
+            {"notify":false,"inherit":true,"reload":false}
+          );
            MOLApi({
             "service":"spatial/regions/regions",
-            "params":{"id" : type_id},
+            "params":{"id" : type.id},
             "canceller": $scope.canceller,
             "loading": true
           }).success(function(response) {
@@ -75,7 +80,6 @@ angular.module('mol.location-search',['mol-location-search-templates'])
           function(newValue,oldValue) {
             if(newValue)  {
               $scope.selectRegionType(newValue);
-              
             }
           }
         );

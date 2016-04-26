@@ -1,14 +1,14 @@
 <script type="text/ng-template" id="ac-template.html">
 	<a class="searchResult">
 		<span class="sciName" ng-bind-html="match.label.scientificname | uibTypeaheadHighlight:query"></span>
-	  <span class="commonName" ng-bind-html="match.label.vernacular | uibTypeaheadHighlight:query"></span>
+	  <span class="commonName" ng-bind-html="((match.label.vernacular) ? match.label.vernacular : '') | uibTypeaheadHighlight:query"></span>
 	</a>
 </script>
 
 <input type="text" class="form-control"
 	autocomplete="on"
 	ng-model="selected.value"
-	placeholder="Select a species"
-	uib-typeahead="species.scientificname as species for species in searchSpecies($viewValue)"
+	placeholder="Search for a species"
+	uib-typeahead="species.scientificname as species for species in searchSpecies(($viewValue)?$viewValue:'.')"
 	typeahead-on-select="selectSpecies($model)"
 	typeahead-template-url="ac-template.html">

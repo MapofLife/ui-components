@@ -9,18 +9,20 @@ angular.module('mol.species-search',['mol-species-search-templates'])
       templateUrl: 'mol-species-search-control.html',
       controller: function($scope) {
 
+        var regionid = undefined;
+        try{ regionid = $scope.$parent.region.id} catch(e) {};
+
         $scope.canceller = $q.defer();
         //search for a new species in the search bar
         $scope.searchSpecies = function(term) {
           //$scope.canceller.resolve();
-          var regionid = undefined;
-          try{ regionid = $scope.$parent.region.id} catch(e) {}
+
           return MOLApi({
             "service":"species/groupsearch",
             "params" : {
               "query": term,
               "group": $scope.groups.selected,
-              "regionid": regionid
+              "regionid": $scope.region.id
             },
             "canceller": $scope.canceller,
             "loading": true
@@ -33,28 +35,32 @@ angular.module('mol.species-search',['mol-species-search-templates'])
 
         //get all available taxa
         $scope.groups = {
-            selected: null,
             available:[]};
 
+        $scope.updateTaxa = function(region_id) {
         MOLApi({
            "canceller": $scope.canceller,
            "loading": true,
-           "service" : "system/availabletaxa",
+           "service" : "spatial/regions/taxa",
            "version" : "0.x",
+           "params" : (region_id) ? {"region_id":region_id}:{},
            "creds" : true,
         }).then(
+
             function(results) {
+              var groups = [];
               angular.forEach(
                 results.data,
                 function(result) {
-                  $scope.groups.available.push(
+                  groups.push(
                     {label: result.taxa, value: result.taxa}
                   )
                 }
-              )
+              );
+              $scope.groups.available = groups;
             }
           );
-
+        }
 
 
         $scope.selectSpecies = function(scientificname) {
@@ -183,6 +189,16 @@ angular.module('mol.species-search',['mol-species-search-templates'])
             }
           }
         );
+
+        $scope.$watch(
+          'region.id',
+          function(newValue,oldValue) {
+            if(newValue)  {
+              $scope.updateTaxa(newValue);
+            }
+          }
+        );
+        $scope.updateTaxa();
 
         if($state.params.scientificname) {
           $scope.selectSpecies($state.params.scientificname.replace(/_/g, ' '));

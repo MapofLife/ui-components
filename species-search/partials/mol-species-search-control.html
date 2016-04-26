@@ -1,18 +1,18 @@
 <table class="search"><tr>
     <td>
-    <select class="form-control" ng-model="groups.selected"
-    >     <option disabled ng-value='null'>Select a group...</option>
-          <option
-            ng-selected="(group.value === $parent.groups.selected)"
-            ng-value="group.value" ng-repeat="group in groups.available">
-                {{ group.label.replace('fishs','fish') | capitalize}}
-          </option>
+    <select
+            placeholder="Select a group..."
+            class="form-control" ng-model="groups.selected"
+            ng-options="group.value as group.label | capitalize for group in groups.available">
+            <option selected disabled>Select a group</option>
+            <option ng-value="null">All groups</option>
     </select>
     </td>
     <td><span class="form-group">
           <div ng-include="'mol-species-search-autocomplete.html'"></div>
     </span></td>
-    <!--<td class="hidden-xxs">
-      <button type="button" ng-click="randomSpecies()" class="random top_button btn btn-default">Pick random</button>
-    </td>-->
+    <td >
+      <button type="button" ng-click="randomSpecies()"
+        class="random top_button btn btn-default"><i class="fa fa-lg fa-random"></i></button>
+    </td>
 </tr></table>

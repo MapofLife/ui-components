@@ -7,7 +7,7 @@
 <input type="text" class="form-control"
 	autocomplete="on"
 	ng-model="regions.selected.name"
-	placeholder="Select a region"
+	placeholder="Search for a region"
 	uib-typeahead="region for region in regions.available | filter:$viewValue | limitTo:50"
 	typeahead-on-select="selectRegion($model)"
 	typeahead-template-url="ac-region-template.html">
