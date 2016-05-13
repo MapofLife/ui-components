@@ -53,7 +53,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
                 results.data,
                 function(result) {
                   groups.push(
-                    {label: result.taxa, value: result.taxa}
+                    {label: result.taxa.replace('fishs','fish'), value: result.taxa}
                   )
                 }
               );

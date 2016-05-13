@@ -11,8 +11,8 @@
     <td><span class="form-group">
           <div ng-include="'mol-species-search-autocomplete.html'"></div>
     </span></td>
-    <td >
+    <td ng-show="!$state.params.norandom">
       <button type="button" ng-click="randomSpecies()"
-        class="random top_button btn btn-default"><i class="fa fa-lg fa-random"></i></button>
+        class="random top_button btn btn-default">Pick Random</button>
     </td>
 </tr></table>

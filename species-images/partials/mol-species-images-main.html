@@ -1,4 +1,4 @@
-<div ng-show="images"  ng-mouseover="showControls=true" ng-mouseout="showControls=false"
+<div ng-show="images.length>0"  ng-mouseover="showControls=true" ng-mouseout="showControls=false"
 class="species-images" ng-style="{width: (size) ? size + 'px' : '100%', margin: '10px', minWidth:'80px', maxWidth: '320px'}">
     <a href ng-click="fullsizeImage(selectedImage)">
       <img  height='100%' width="100%"

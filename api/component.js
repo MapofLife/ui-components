@@ -26,7 +26,7 @@ angular.module('mol.api',[])
   				withCredentials: args.creds || false,
   				cache: true,
   				timeout: args.canceller.promise || undefined,
-  				ignoreLoadingBar: args.loading || false
+  				ignoreLoadingBar: false //args.loading 
   			});
   		};
   	}
