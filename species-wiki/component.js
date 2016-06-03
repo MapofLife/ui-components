@@ -1,7 +1,7 @@
 angular.module('mol.species-wiki',['mol-species-wiki-templates'])
 .directive('molSpeciesWiki', [
-  'GetWiki','$state','$q',
-  function(GetWiki,$state,$q) {
+  'MOLApi','molApiVersion',
+  function(MOLApi,molApiVersion) {
     return {
       restrict: 'E',
       scope: {
@@ -13,9 +13,13 @@ angular.module('mol.species-wiki',['mol-species-wiki-templates'])
         $scope.$watch(
           "scientificname",
           function(newValue,oldValue) {
-            GetWiki(newValue).query(
-              function(wiki) {
-                $scope.wiki = wiki;
+            MOLApi({
+              "service" : "wiki",
+              "version" : molApiVersion,
+              "params": {"scientificname" : newValue}
+            }).then(
+              function(response) {
+                $scope.wiki = response.data;
               }
             );
           });

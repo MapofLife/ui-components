@@ -1,59 +1,33 @@
 angular.module('mol.species-description',['mol-species-description-templates'])
 .directive('molSpeciesDescription', [
-  'GetWiki',
-  function( GetWiki) {
-
+  'MOLApi','molApiVersion',
+  function(MOLApi,molApiVersion) {
     return {
       restrict: 'E',
       scope: {
-        scientificname: '=scientificname',
+        scientificname: '=scientificname'
       },
+      transclude: false,
       templateUrl: 'mol-species-description-main.html',
-      controller: function($scope,$q, $state,$timeout,$cookies) {
-        $scope.canceller = $q.defer();
-        $scope.description = undefined;
+      controller: function($scope,MOLApi,molApiVersion) {
         $scope.$watch(
-          'scientificname',
+          "scientificname",
           function(newValue,oldValue) {
-            $scope.description = undefined;
-            if(newValue == undefined) {
-              return;
+            if(newValue) {
+              MOLApi({
+                "service" : "species/wiki",
+                "version" : molApiVersion,
+                "params": {
+                  "name" : newValue,
+                  "lang" : "en"
+                }
+              }).then(
+                function(response) {
+                  $scope.model = response.data;
+                }
+              );
             }
-          GetWiki(newValue).query(
-              function(response){
-                $scope.description = response.content;
-            });
-          }
-        );
+          });
       }
     };
-}]).factory(
-	'GetWiki',
-	[
-		'$resource','$q',
-		function($resource, $q) {
-			return function(name) {
-				var abort = $q.defer();
-				return $resource(
-					'https://api.mol.org/wiki',
-					{},
-					{
-						query: {
-							method:'GET',
-							params:{
-								name: name,
-							},
-							ignoreLoadingBar: false,
-							isArray:false,
-							timeout: abort,
-							transformResponse : function(data, headersGetter) {
-								return JSON.parse(data);
-							}
-
-						}
-					}
-				);
-			}
-		}
-	]
-);
+}]);
