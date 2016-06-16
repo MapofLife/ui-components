@@ -1,7 +1,7 @@
 angular.module('mol.species-wiki',['mol-species-wiki-templates'])
 .directive('molSpeciesWiki', [
-  'MOLApi','molApiVersion',
-  function(MOLApi,molApiVersion) {
+  'molApi','molApiVersion',
+  function(molApi,molApiVersion) {
     return {
       restrict: 'E',
       scope: {
@@ -13,7 +13,7 @@ angular.module('mol.species-wiki',['mol-species-wiki-templates'])
         $scope.$watch(
           "scientificname",
           function(newValue,oldValue) {
-            MOLApi({
+            molApi({
               "service" : "wiki",
               "version" : molApiVersion,
               "params": {"scientificname" : newValue}

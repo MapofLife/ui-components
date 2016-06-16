@@ -1,7 +1,7 @@
 angular.module('mol.location-search',['mol-location-search-templates'])
 .directive('molLocationSearch', [
-  'MOLApi','$state','$q',
-  function(MOLApi,$state,$q) {
+  'molApi','$state','$q',
+  function(molApi,$state,$q) {
     return {
       restrict: 'E',
       scope: false,
@@ -22,7 +22,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             selected: undefined
         }
 
-        MOLApi({
+        molApi({
            "canceller": $scope.canceller,
            "loading": true,
            "service" : "spatial/regions/types",
@@ -48,7 +48,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             {"regiontype":type.name},
             {"notify":false,"inherit":true,"reload":false}
           );
-           MOLApi({
+           molApi({
             "service":"spatial/regions/regions",
             "params":{"id" : type.id},
             "canceller": $scope.canceller,

@@ -1,7 +1,7 @@
 angular.module('mol.species-description',['mol-species-description-templates'])
 .directive('molSpeciesDescription', [
-  'MOLApi','molApiVersion',
-  function(MOLApi,molApiVersion) {
+  'molApi','molApiVersion',
+  function(molApi,molApiVersion) {
     return {
       restrict: 'E',
       scope: {
@@ -9,12 +9,12 @@ angular.module('mol.species-description',['mol-species-description-templates'])
       },
       transclude: false,
       templateUrl: 'mol-species-description-main.html',
-      controller: function($scope,MOLApi,molApiVersion) {
+      controller: function($scope,molApi,molApiVersion) {
         $scope.$watch(
           "scientificname",
           function(newValue,oldValue) {
             if(newValue) {
-              MOLApi({
+              molApi({
                 "service" : "species/wiki",
                 "version" : molApiVersion,
                 "params": {

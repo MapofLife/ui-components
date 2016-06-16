@@ -1,5 +1,5 @@
 angular.module('mol.region-selector', ['mol-region-selector-templates'])
-    .directive('molRegionSelector', ['$modal', 'MOLApiX', function($modal, MOLApiX) {
+    .directive('molRegionSelector', ['$modal', 'molApiX', function($modal, molApiX) {
         return {
             restrict: 'A',
             scope: {
@@ -8,7 +8,7 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                 height: '=height'
             },
             controller: function($scope) {
-                //MOLApiX('regiontypes').then(function(results) {
+                //molApiX('regiontypes').then(function(results) {
                     //$scope.regionTypes = results.data;
                     $scope.regionTypes = [{type: 'mountain_region', name: 'Mountain Region'}];
                 //});
@@ -38,7 +38,7 @@ angular.module('mol.region-selector', ['mol-region-selector-templates'])
                             $scope.searchRegion = function(text) {
                                 $scope.regionRecord = undefined;
                                 var type = $scope.regionType ? $scope.regionType.type : undefined;
-                                return MOLApiX('searchregion',
+                                return molApiX('searchregion',
                                     { type: type, name: text }
                                 ).then(
                                     function(results) { return results.data; }

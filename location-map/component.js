@@ -17,7 +17,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
 
 
       },
-      controller: function($scope,$state, $http, $element, leafletData, MOLApiX) {
+      controller: function($scope,$state, $http, $element, leafletData, molApiX) {
 
 
         addResizeListener(

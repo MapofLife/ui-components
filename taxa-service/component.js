@@ -3,8 +3,8 @@
 angular.module('mol.species-list-service',[])
 //Service to manage a species list selected by location.
 .service("MOLSpeciesList",[
-   'MOLApi','MOLApiX','$http', '$state',
-   function(MOLApi,MOLApiX,$http,$state) {
+   'molApi','molApiX','$http', '$state',
+   function(molApi,molApiX,$http,$state) {
 
 			this.searchRegion = function(region) {
 <<<<<<< HEAD
@@ -14,7 +14,7 @@ angular.module('mol.species-list-service',[])
           angular.forEach(config,function(value,key){
             if(remove[key]){delete config[key]}
           });
-					return MOLApiX('specieslist',angular.extend(config,defaults));
+					return molApiX('specieslist',angular.extend(config,defaults));
 =======
           var defaults = {"lang":"en","radius":50000},
               remove = {"bounds":true,"extent":true},
@@ -23,8 +23,8 @@ angular.module('mol.species-list-service',[])
                 config,
                 function(value,key) {if(remove[key]) {delete config[key]}});
 					return (region.lat && region.lng) ?
-							  MOLApiX('specieslist',angular.extend(config,defaults)) :
-				        MOLApiX('specieslist',config);
+							  molApiX('specieslist',angular.extend(config,defaults)) :
+				        molApiX('specieslist',config);
 >>>>>>> eacb0e61207f11beef58e575fe3d82c4aedb8a33
 			}
 

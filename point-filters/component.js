@@ -1,7 +1,7 @@
 angular.module('mol.point-filters',['mol-point-filters-templates'])
 .directive('pointsHistogram', [
-  'MOLApi','$q',
-  function(MOLApi,$q) {
+  'molApi','$q',
+  function(molApi,$q) {
     return {
       restrict: 'E',
       scope: {
@@ -191,7 +191,7 @@ angular.module('mol.point-filters',['mol-point-filters-templates'])
           function(newValue,oldValue) {
             if(newValue) {
               $scope.initialized=false;
-              MOLApi({
+              molApi({
                 "service":"species/pointshistogram",
                 "params": {"scientificname":newValue},
                 "loading":true,

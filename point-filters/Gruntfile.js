@@ -39,7 +39,11 @@ module.exports = function(grunt) {
           "component.min.js": [
             "templates.js",
             "component.js",
-            'component.min.css.js'
+            "component.min.css.js"
+          ],
+          "templates.debug.js": [
+            "templates.js",
+            "component.min.css.js"
           ]
         }
       }

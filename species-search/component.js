@@ -1,7 +1,7 @@
 angular.module('mol.species-search',['mol-species-search-templates'])
 .directive('molSpeciesSearch', [
-  'MOLApi','$state','$q',
-  function(MOLApi,$state,$q) {
+  'molApi','$state','$q',
+  function(molApi,$state,$q) {
     return {
       restrict: 'E',
       scope: false,
@@ -17,7 +17,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         $scope.searchSpecies = function(term) {
           //$scope.canceller.resolve();
 
-          return MOLApi({
+          return molApi({
             "service":"species/groupsearch",
             "params" : {
               "query": term,
@@ -38,11 +38,10 @@ angular.module('mol.species-search',['mol-species-search-templates'])
             available:[]};
 
         $scope.updateTaxa = function(region_id) {
-        MOLApi({
+        molApi({
            "canceller": $scope.canceller,
            "loading": true,
            "service" : "spatial/regions/taxa",
-           "version" : "0.x",
            "params" : (region_id) ? {"region_id":region_id}:{},
            "creds" : true,
         }).then(
@@ -67,7 +66,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
          if(scientificname==='') {
            $scope.randomSpecies();
          } else {
-           MOLApi({
+           molApi({
             "service":"species/habitat",
             "params":{"id" : scientificname},
             "canceller": $scope.canceller,
@@ -166,7 +165,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
           try {group = $scope.groups.selected.value}
           catch(e) {}
 
-          MOLApi({
+          molApi({
             "service": "species/random",
             "params": {
              "taxogroup" : group,

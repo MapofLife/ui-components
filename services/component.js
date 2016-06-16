@@ -3,7 +3,7 @@
 angular.module('mol.services', ['ngResource'])
 //Generic service for calling the MOL v0.1 API
 	.factory(
-		'MOLApi',
+		'molApi',
 		['$http',
 			function($http) {
 				return function(service, params, canceller, loading) {
@@ -23,7 +23,7 @@ angular.module('mol.services', ['ngResource'])
 		])
 //Generic service for calling the MOL v0.1 API
 	.factory(
-		'MOLApiX',
+		'molApiX',
 		['$http',
 			function($http) {
 				return function(service, params, version, canceller, loading) {

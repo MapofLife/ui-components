@@ -1,7 +1,7 @@
 angular.module('mol.species-images',['mol-species-images-templates'])
 .directive('molSpeciesImages', [
-  '$state','$q','$timeout','$cookies','$http','GetImages',
-  function($state,$q, $timeout,$cookies, $http,GetImages) {
+  '$state','$q','$timeout','$cookies','molApi','molApiVersion',
+  function($state,$q, $timeout,$cookies, molApi,molApiVersion) {
 
     return {
       restrict: 'E',
@@ -22,12 +22,19 @@ angular.module('mol.species-images',['mol-species-images-templates'])
             if(newValue == undefined) {
               return;
             }
-          GetImages(newValue,$scope.size || 80).query(
-              function(response){
-                $scope.images = response;
+          molApi({
+            "service": "species/images/list",
+            "version": molApiVersion,
+            "params" : {"scientificname":newValue}
+          }).then(
+              function(response) {
+                $scope.images = response.data[0].species_images.map(function(i) {
+                  return angular.extend(i,
+                    {"asset_url": i.asset_url + '=s' + ($scope.size || 80) + '-c'})
+                  });
                 $scope.selectedImage = 0;
                 if($scope.scrolling)
-                $timeout(function(){$scope.scrollImage(1,true)},2000);
+                  $timeout(function(){$scope.scrollImage(1,true)},2000);
             });
           }
         );
@@ -72,49 +79,6 @@ angular.module('mol.species-images',['mol-species-images-templates'])
             $timeout(function(){$scope.scrollImage(1, true)},5000);
           }
         }
-
-
-
       }
     };
-}]).factory(
-	'GetImages',
-	[
-		'$resource','$q',
-		function($resource,$q) {
-			return function(name,size) {
-				var abort = $q.defer();
-
-				return $resource(
-					'https://api.mol.org/imgstore/list',
-					{},
-					{
-						query: {
-							method:'GET',
-							origin: '*',
-							withCredentials:false,
-							params:{
-								name: name
-							},
-							ignoreLoadingBar: false,
-							isArray: true,
-							timeout: abort,
-							transformResponse : function(data, headersGetter) {
-								try {
-									var result = JSON.parse(data);
-									return result.images.map(
-            			function(v,i){
-										v.url = '{0}=s{1}-c'.format((v.url||v.asset_url),size)
-            				return v
-            			});
-								} catch (e){
-									return undefined;
-								}
-						}
-					}
-				}
-				);
-			}
-		}
-	]
-);
+}]);
