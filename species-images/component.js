@@ -28,6 +28,7 @@ angular.module('mol.species-images',['mol-species-images-templates'])
             "params" : {"scientificname":newValue}
           }).then(
               function(response) {
+                try {
                 $scope.images = response.data[0].species_images.map(function(i) {
                   return angular.extend(i,
                     {"asset_url": i.asset_url + '=s' + ($scope.size || 80) + '-c'})
@@ -35,6 +36,7 @@ angular.module('mol.species-images',['mol-species-images-templates'])
                 $scope.selectedImage = 0;
                 if($scope.scrolling)
                   $timeout(function(){$scope.scrollImage(1,true)},2000);
+                } catch(e) {}
             });
           }
         );

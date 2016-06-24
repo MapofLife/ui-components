@@ -5,6 +5,25 @@
 	</a>
 </script>
 
+<script type="text/ng-template" id="popup-template.html">
+  <div class="custom-popup-wrapper">
+		 <ul class="dropdown-menu ng-isolate-scope"
+		 		ng-show="isOpen() && !moveInProgress"
+				style="position:absolute;"
+				ng-style="{top: position().top+'px', right: position().right+'px'}"
+				role="listbox" aria-hidden="false"
+				uib-typeahead-popup=""
+				matches="matches" active="activeIdx"
+				select="select(activeIdx, evt)"
+				move-in-progress="moveInProgress" query="query"
+
+				assign-is-open="assignIsOpen(isOpen)" debounce="debounceUpdate" template-url="ac-template.html">
+     </ul>
+  </div>
+</script>
+
+
+
 <input type="text" class="form-control"
 	autocomplete="on"
 	ng-model="selected.value"

@@ -9,5 +9,5 @@ angular.module("mol-location-search-autocomplete.html", []).run(["$templateCache
 
 angular.module("mol-location-search-control.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("mol-location-search-control.html",
-    "<table class=search><tr><td><select class=form-control ng-model=regionTypes.selected placeholder=\"Select a region type\" ng-options=\"type as type.title | capitalize for type in regionTypes.available\"><option selected disabled>Select region type</option></select></td><td><span class=form-group><div ng-include=\"'mol-location-search-autocomplete.html'\"></div></span></td></tr></table>");
+    "<table class=search><tr><td><select class=form-control ng-model=regionTypes.selected ng-options=\"type as type.title | capitalize for type in regionTypes.available\"></select></td><td><span class=form-group><div ng-include=\"'mol-location-search-autocomplete.html'\"></div></span></td></tr></table>");
 }]);

@@ -11,7 +11,6 @@ angular.module('mol.location-search',['mol-location-search-templates'])
 
         $scope.canceller = $q.defer();
 
-
         //get all available region types
         $scope.regionTypes = {
             selected: undefined,
@@ -26,7 +25,6 @@ angular.module('mol.location-search',['mol-location-search-templates'])
            "canceller": $scope.canceller,
            "loading": true,
            "service" : "spatial/regions/types",
-           "version" : "0.x",
            "creds" : true,
         }).then(
             function(response) {
@@ -35,34 +33,40 @@ angular.module('mol.location-search',['mol-location-search-templates'])
                 response.data,
                 function(type) {
                   try {
-                  if(type.name.toLowerCase()===$state.params.regiontype.toLowerCase()){
-                    $scope.regionTypes.selected = type.id;
+                  if(type.type.toLowerCase()===$state.params.regiontype.toLowerCase()){
+                    $scope.regionTypes.selected = type;
                   }} catch(e) {}
                 });
             }
           );
 
         $scope.selectRegionType = function(type) {
-          $state.transitionTo(
-            $state.current,
-            {"regiontype":type.name},
-            {"notify":false,"inherit":true,"reload":false}
-          );
-           molApi({
-            "service":"spatial/regions/regions",
-            "params":{"id" : type.id},
-            "canceller": $scope.canceller,
-            "loading": true
-          }).success(function(response) {
-            $scope.regions.available = response;
-            angular.forEach(
-              response,
-              function(region) {
-                try{if(region.name.toLowerCase()===$state.params.region.toLowerCase()){
-                  $scope.selectRegion(region);
-                }}catch(e){}
-              });
-          });
+          if(type&&type.dataset_id) {
+            $state.transitionTo(
+              $state.current,
+              {"regiontype":type.type},
+              {"notify":false,"inherit":true,"reload":false}
+            );
+             molApi({
+              "service":"spatial/regions/list",
+              "params":{"dataset_id" : type.dataset_id},
+              "canceller": $scope.canceller,
+              "loading": true
+            }).success(function(response) {
+              $scope.regions.available = response;
+              angular.forEach(
+                response,
+                function(region) {
+                  try{
+                    if(region.name.toLowerCase()===$state.params.region.toLowerCase()){
+                      $scope.selectRegion(region);
+                    }
+                  }catch(e){
+                    console.log(e);
+                  }
+                });
+            });
+          }
         }
 
         $scope.selectRegion = function(region){
@@ -70,7 +74,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
           $scope.regions.selected = region;
           $state.transitionTo(
             $state.current,
-            {"region":region.name},
+            {"region":region.name, "regiontype":$scope.regionTypes.selected.type},
             {"notify":false,"inherit":true,"reload":false}
           )
         }

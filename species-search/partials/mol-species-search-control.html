@@ -9,9 +9,9 @@
     </select>
     </td>
     <td><span class="form-group">
-          <div ng-include="'mol-species-search-autocomplete.html'"></div>
+          <div ng-include="'mol-species-search-autocomplete.html'" style="position:relative"></div>
     </span></td>
-    <td ng-show="!$state.params.norandom">
+    <td ng-show="!$state.params.embed">
       <button type="button" ng-click="randomSpecies()"
         class="random top_button btn btn-default">Pick Random</button>
     </td>

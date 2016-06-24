@@ -10,7 +10,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
       controller: function($scope) {
 
         var regionid = undefined;
-        try{ regionid = $scope.$parent.region.id} catch(e) {};
+        try{ regionid = $scope.$parent.region.dataset_id} catch(e) {};
 
         $scope.canceller = $q.defer();
         //search for a new species in the search bar
@@ -22,7 +22,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
             "params" : {
               "query": term,
               "group": $scope.groups.selected,
-              "regionid": $scope.region.id
+              "regionid": $scope.region.region_id
             },
             "canceller": $scope.canceller,
             "loading": true
