@@ -33,7 +33,6 @@ module.exports = function(grunt) {
       min: {
         files: {
           "component.min.js": [
-            "component.min.css.js",
             "templates.js",
             "component.js"
           ]
@@ -51,22 +50,15 @@ module.exports = function(grunt) {
           ]
         },
       }
-    },
-    css2js: {
-      jsify : {
-        src: 'component.min.css',
-        dest: 'component.min.css.js'
-      }
     }
   });
 
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-css2js');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
 
-  grunt.registerTask('default', ['html2js','cssmin','css2js','uglify']);
+  grunt.registerTask('default', ['html2js','uglify','cssmin']);
 
 
 
