@@ -8,11 +8,12 @@ angular.module('mol.species-description',['mol-species-description-templates'])
       },
       transclude: false,
       templateUrl: 'mol-species-description-main.html',
-      controller: ['$scope','molApi','molApiVersion','$translate','$rootScope','$q',
-        function($scope,molApi,molApiVersion,$translate,$rootScope,$q) {
+      controller: ['$scope','molApi','molApiVersion','$translate','$rootScope','$q','$filter',
+        function($scope,molApi,molApiVersion,$translate,$rootScope,$q, $filter) {
         $scope.model=undefined;
         $scope.canceller = $q.defer();
         $scope.getDesc = function() {
+          var lang = $translate.use();
           $scope.model=undefined;
           $scope.canceller.resolve();
           $scope.canceller = $q.defer();
@@ -21,12 +22,13 @@ angular.module('mol.species-description',['mol-species-description-templates'])
             "version" : molApiVersion,
             "params": {
               "scientificname" :$scope.scientificname,
-              "lang" : $translate.use()
+              "lang" : lang
             },
             "canceller":$scope.canceller
           }).then(
             function(response) {
-              $scope.model = response.data[0].info[0];
+              $scope.model = response.data[0].info.filter(function(i){return i.lang === lang})[0]
+                 || response.data[0].info[0];
             }
           );
         }

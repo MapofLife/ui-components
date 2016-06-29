@@ -33,7 +33,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
                 response.data,
                 function(type) {
                   try {
-                  if(type.type.toLowerCase()===$state.params.regiontype.toLowerCase()){
+                  if(type.type.toLowerCase()==='countries' /*$state.params.regiontype.toLowerCase()*/){
                     $scope.regionTypes.selected = type;
                   }} catch(e) {}
                 });

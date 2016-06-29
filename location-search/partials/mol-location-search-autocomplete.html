@@ -6,6 +6,8 @@
 
 <input type="text" class="form-control"
 	autocomplete="on"
+
+	ng-show="regions.available"
 	ng-model="regions.selected.name"
 	placeholder="Search for a region"
 	uib-typeahead="region for region in regions.available | filter:$viewValue | limitTo:50"

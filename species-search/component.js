@@ -1,16 +1,17 @@
 angular.module('mol.species-search',['mol-species-search-templates'])
-.directive('molSpeciesSearch', [
-  'molApi','$state','$q',
-  function(molApi,$state,$q) {
+.directive('molSpeciesSearch',
+  function() {
     return {
       restrict: 'E',
       scope: false,
       transclude: false,
       templateUrl: 'mol-species-search-control.html',
-      controller: function($scope) {
+      controller: ['$scope','molApi','$state','$q','$translate',
+       function($scope, molApi,$state,$q,$translate) {
 
         var regionid = undefined;
-        try{ regionid = $scope.$parent.region.dataset_id} catch(e) {};
+        try{
+          regionid = $scope.$parent.region.dataset_id} catch(e) {};
 
         $scope.canceller = $q.defer();
         //search for a new species in the search bar
@@ -22,7 +23,8 @@ angular.module('mol.species-search',['mol-species-search-templates'])
             "params" : {
               "query": term,
               "group": $scope.groups.selected,
-              "regionid": $scope.region.region_id
+              "regionid": $scope.region.region_id,
+              "lang": $translate.use()
             },
             "canceller": $scope.canceller,
             "loading": true
@@ -42,7 +44,10 @@ angular.module('mol.species-search',['mol-species-search-templates'])
            "canceller": $scope.canceller,
            "loading": true,
            "service" : "spatial/regions/taxa",
-           "params" : (region_id) ? {"region_id":region_id}:{},
+           "params" : {
+             "region_id":region_id,
+             "lang":$translate.use()
+           },
            "creds" : true,
         }).then(
 
@@ -62,13 +67,18 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         }
 
 
-        $scope.selectSpecies = function(scientificname) {
+
+
+        /*$scope.selectSpecies = function(scientificname) {
          if(scientificname==='') {
            $scope.randomSpecies();
          } else {
            molApi({
             "service":"species/habitat",
-            "params":{"id" : scientificname},
+            "params":{
+              "id" : scientificname,
+              "lang" : $translate.use()
+            },
             "canceller": $scope.canceller,
             "loading": true
             }).success(function(species) {
@@ -159,7 +169,31 @@ angular.module('mol.species-search',['mol-species-search-templates'])
 
             });
           }
-        };
+        };*/
+
+        $scope.selectSpecies = function(scientificname) {
+          var lang = $translate.use();
+          molApi({
+           "service":"species/info",
+           "params":{
+             "scientificname" : scientificname,
+             "lang" : lang
+           },
+           "canceller": $scope.canceller,
+           "loading": true
+         }).then(function(result) {
+            var s = result.data[0];
+            $scope.$parent.species = {
+              scientificname: s.scientificname,
+              common: s.commonname,
+              family: s.family.filter(function(f){return f.lang==lang})[0].name
+                || s.family[0].name
+
+            }
+
+           });
+        }
+
         $scope.randomSpecies = function() {
           var group = null;
           try {group = $scope.groups.selected.value}
@@ -169,12 +203,13 @@ angular.module('mol.species-search',['mol-species-search-templates'])
             "service": "species/random",
             "params": {
              "taxogroup" : group,
+             "lang": $translate.use()
            },
            "canceller": $scope.canceller,
            "loading": true
           }).success(
             function(species) {
-              $scope.groups.selected = species.taxa;
+              //$scope.groups.selected = species.taxa;
               $scope.selectSpecies(species.scientificname);
           });
         };
@@ -206,6 +241,6 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         };
 
 
-      }
+      }]
     };
-}]);
+});
