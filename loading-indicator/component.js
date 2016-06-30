@@ -1,4 +1,10 @@
-angular.module('mol.loading-indicator',['mol-loading-indicator-templates'])
+angular.module('mol.loading-indicator',['angular-loading-bar','mol-loading-indicator-templates'])
+ .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.includeSpinner = false;
+    cfpLoadingBarProvider.includeBar = false;
+    //cfpLoadingBarProvider.includeBar = false;
+    cfpLoadingBarProvider.latencyThreshold = 100;
+  }])
   .directive('molLoadingIndicator', [
     function() {
     return {

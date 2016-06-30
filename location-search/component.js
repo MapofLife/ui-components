@@ -21,7 +21,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             selected: undefined
         }
 
-        molApi({
+      /*  molApi({
            "canceller": $scope.canceller,
            "loading": true,
            "service" : "spatial/regions/types",
@@ -33,12 +33,15 @@ angular.module('mol.location-search',['mol-location-search-templates'])
                 response.data,
                 function(type) {
                   try {
-                  if(type.type.toLowerCase()==='countries' /*$state.params.regiontype.toLowerCase()*/){
+                  if(type.type.toLowerCase()==='countries' ){//$state.params.regiontype.toLowerCase()*{
                     $scope.regionTypes.selected = type;
                   }} catch(e) {}
                 });
             }
-          );
+          );*/
+
+
+
 
         $scope.selectRegionType = function(type) {
           if(type&&type.dataset_id) {
@@ -61,20 +64,18 @@ angular.module('mol.location-search',['mol-location-search-templates'])
                     if(region.name.toLowerCase()===$state.params.region.toLowerCase()){
                       $scope.selectRegion(region);
                     }
-                  }catch(e){
-                    console.log(e);
-                  }
+                  }catch(e){}
                 });
             });
           }
         }
 
         $scope.selectRegion = function(region){
-          $scope.$parent.region = region;
-          $scope.regions.selected = region;
+          $scope.$parent.region = angular.copy(region);
+          $scope.regions.selected = angular.copy(region);
           $state.transitionTo(
             $state.current,
-            {"region":region.name, "regiontype":$scope.regionTypes.selected.type},
+            {"region":region.name},
             {"notify":false,"inherit":true,"reload":false}
           )
         }
@@ -87,6 +88,12 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             }
           }
         );
+
+        $scope.selectRegionType({
+          "type":"countries",
+          "dataset_id":"e9707baa-46e2-4ec4-99b6-86b1712e02de"}
+
+        )
 
       }
     };

@@ -1,7 +1,7 @@
 angular.module('mol.species-images',['mol-species-images-templates'])
 .directive('molSpeciesImages', [
-  '$state','$q','$timeout','$cookies','molApi','molApiVersion',
-  function($state,$q, $timeout,$cookies, molApi,molApiVersion) {
+  '$state','$q','$timeout','$cookies','molApi',
+  function($state,$q, $timeout,$cookies, molApi) {
 
     return {
       restrict: 'E',
@@ -13,18 +13,15 @@ angular.module('mol.species-images',['mol-species-images-templates'])
       templateUrl: 'mol-species-images-main.html',
       controller: function($scope,$q, $state,$timeout,$cookies) {
         $scope.canceller = $q.defer();
+        $scope.images = undefined;
         $scope.loggedIn = ($cookies.muprsns !== undefined);
         $scope.$watch(
           'scientificname',
-          function(newValue,oldValue) {
+          function(n,o) {
             $scope.images = undefined;
-
-            if(newValue == undefined) {
-              return;
-            }
+            if(n) {
           molApi({
             "service": "species/images/list",
-            "version": molApiVersion,
             "params" : {"scientificname":newValue}
           }).then(
               function(response) {
@@ -38,6 +35,7 @@ angular.module('mol.species-images',['mol-species-images-templates'])
                   $timeout(function(){$scope.scrollImage(1,true)},2000);
                 } catch(e) {}
             });
+          }
           }
         );
 

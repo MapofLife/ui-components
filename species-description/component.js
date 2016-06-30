@@ -8,8 +8,8 @@ angular.module('mol.species-description',['mol-species-description-templates'])
       },
       transclude: false,
       templateUrl: 'mol-species-description-main.html',
-      controller: ['$scope','molApi','molApiVersion','$translate','$rootScope','$q','$filter',
-        function($scope,molApi,molApiVersion,$translate,$rootScope,$q, $filter) {
+      controller: ['$scope','molApi','$translate','$rootScope','$q','$filter',
+        function($scope,molApi,$translate,$rootScope,$q, $filter) {
         $scope.model=undefined;
         $scope.canceller = $q.defer();
         $scope.getDesc = function() {
@@ -19,7 +19,6 @@ angular.module('mol.species-description',['mol-species-description-templates'])
           $scope.canceller = $q.defer();
           molApi({
             "service" : "species/info",
-            "version" : molApiVersion,
             "params": {
               "scientificname" :$scope.scientificname,
               "lang" : lang
