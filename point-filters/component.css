@@ -42,3 +42,7 @@
 	margin-left: -6px;
 
 }
+
+points-histogram .btn {
+  width:25px; height:25px;
+}

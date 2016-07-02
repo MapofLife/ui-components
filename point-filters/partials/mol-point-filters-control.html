@@ -5,7 +5,7 @@
   </div>
   <div  class="histogram_filter">
     <checkbox class="btn-primary" ng-model="filters.uncertainty"></checkbox>
-    <b class="clickable" tooltip="
+    &nbsp;<b class="clickable" uib-tooltip="
       Spatial uncertainty of an observation, in kilometers. 20km if no uncertainty is provided with the observation.">Uncertainty</b>
     <div class="histogram_totals">{{totals.uncertainty | number}} selected</div>
     <!--{{_uncertainty.min | mKm }} - {{ (_uncertainty.max < 500000)? (_uncertainty.max | mKm) : 'any value' }}-->
@@ -17,7 +17,7 @@
           ng-repeat="bucket in histogram.uncertainty_buckets | toArray">
             <div class="bar"
               tooltip-placement="right"
-              tooltip="{{bucket.ct | number}} point records available with a geographic uncertainty between {{bucket.min | mKm}} and {{bucket.max | mKm}}."
+              uib-tooltip="{{bucket.ct | number}} point records available with a geographic uncertainty between {{bucket.min | mKm}} and {{bucket.max | mKm}}."
               ng-style="{height:bucket.height}"></div>
           </td>
           <td colspan=1></td>
@@ -48,7 +48,7 @@
   </div>
   <div class="histogram_filter">
     <checkbox class="btn-primary" ng-model="filters.years"></checkbox>
-    <b>Years</b>
+    &nbsp;<b>Years</b>
     <div class="histogram_totals">{{totals.years | number}} selected</div>
     <!--{{(_year.min>0) ? _year.min : 'Prehistoric' }} - {{(_year.max < 2015) ? _year.max : 'Present'}}-->
     <div class="histogram_container">
@@ -58,7 +58,7 @@
             <div class="bar"
               tooltip-placement="right"
 
-              tooltip="{{histogram.year_buckets['0'].ct}} point records available with no year value."
+              uib-tooltip="{{histogram.year_buckets['0'].ct}} point records available with no year value."
               ng-style="{height:histogram.year_buckets['0'].height}"></div>
           </td>
           <td colspan=3 halign="middle" valign="bottom">
@@ -68,7 +68,7 @@
             <div class="bar"
             tooltip-placement="right"
 
-            tooltip="{{bucket.ct | number}} point records available between {{(bucket.min > 0) ? bucket.min : 'the beginning of time'}} and {{(bucket.max < 2015)?bucket.max:' the present'}}." ng-style="{height:bucket.height}"></div>
+            uib-tooltip="{{bucket.ct | number}} point records available between {{(bucket.min > 0) ? bucket.min : 'the beginning of time'}} and {{(bucket.max < 2015)?bucket.max:' the present'}}." ng-style="{height:bucket.height}"></div>
           </td>
           <td colspan=1></td>
         </tr>
@@ -100,7 +100,7 @@
           </td>
         </tr>
         <tr>
-          <td tooltip="Check to include points with no year recorded." tooltip-placement="right" halign="middle" style="text-align:center" colspan=2>
+          <td uib-tooltip="Check to include points with no year recorded." tooltip-placement="right" halign="middle" style="text-align:center" colspan=2>
             <checkbox class="btn-primary"
 
 
@@ -118,7 +118,7 @@
     </div>
     <div ng-show="totals.total>5000" class="histogram_filter">
       <checkbox class="btn-primary" ng-model="filters.limit"></checkbox>
-      Limit map to most recent {{limit}} points.
+      &nbsp;Limit map to most recent {{limit}} points.
       <div style="width:90%;margin:5px;" range-slider show-values="false"
             step="500" min="0" max="50000"
             pin-handle="min"

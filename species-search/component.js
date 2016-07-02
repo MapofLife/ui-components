@@ -15,9 +15,14 @@ angular.module('mol.species-search',['mol-species-search-templates'])
 
 
         $rootScope.$on(
-          ''
-        )
-
+            '$translateChangeSuccess',function(e) {
+              var lang = $translate.use();
+              $scope.updateTaxa($scope.region.region_id);
+              $scope.species.common =
+                $scope.species.taxonomy[lang+'_name'] ||
+                $scope.species.taxonomy.en_name;
+            }
+        );
         $scope.canceller = $q.defer();
         //search for a new species in the search bar
         $scope.searchSpecies = function(term) {
@@ -48,7 +53,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         molApi({
            "canceller": $scope.canceller,
            "loading": true,
-           "service" : "species/availabletaxa",
+           "service" : "spatial/regions/taxa",
            "params" : {
              "region_id":region_id,
              "lang":$translate.use()

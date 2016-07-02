@@ -5,8 +5,8 @@ angular.module('mol.i18n',['mol-i18n-templates'])
       scope: false,
       transclude: false,
       templateUrl: 'mol-i18n-control.html',
-      controller: [ '$rootScope','$scope','$translate','$cookies','$location',
-      function($rootScope, $scope,$translate,$cookies,$location) {
+      controller: [ '$rootScope','$scope','$translate','$cookies','$location','$window','$state',
+      function($rootScope, $scope,$translate,$cookies,$location,$window,$state) {
         $scope.availLangs = $translate.getAvailableLanguageKeys();
         $scope.curLang = $translate.use();
         $scope.selLang = function(lang) {
@@ -14,7 +14,19 @@ angular.module('mol.i18n',['mol-i18n-templates'])
         }
         $rootScope.$on(
           '$translateChangeSuccess',function(e) {
-            $scope.curLang = $translate.use();
+            var newLang = $translate.use();
+            if($state.params.lang) {
+              $scope.curLang = newLang;
+              $state.transitionTo(
+                $state.current.name,
+                angular.extend($state.params,{lang:newLang})
+              );
+            } else {
+              $location.path('/'+newLang+$location.path());
+              $window.location=$location.protocol()+'://'
+                +$location.host()+($location.port()?':'
+                +$location.port():'')+$location.url();
+            }
           }
         )
       }]

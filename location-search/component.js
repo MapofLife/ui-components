@@ -40,7 +40,17 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             }
           );*/
 
+        $scope.global = function() {
+            $scope.selectRegion({
+              bnds: [
+                -180,-90,180,90
+              ],
+              name: "",
+              type: "global"
+            });
 
+
+        }
 
 
         $scope.selectRegionType = function(type) {
@@ -75,7 +85,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
           $scope.regions.selected = angular.copy(region);
           $state.transitionTo(
             $state.current,
-            {"region":region.name},
+            {"region":region.name.toLowerCase()},
             {"notify":false,"inherit":true,"reload":false}
           )
         }

@@ -22,20 +22,20 @@ angular.module('mol.species-images',['mol-species-images-templates'])
             if(n) {
           molApi({
             "service": "species/images/list",
-            "params" : {"scientificname":newValue}
+            "params" : {"scientificname":n}
           }).then(
               function(response) {
                 try {
-                $scope.images = response.data[0].species_images.map(function(i) {
+                $scope.images = response.data[0].images.map(function(i) {
                   return angular.extend(i,
-                    {"asset_url": i.asset_url + '=s' + ($scope.size || 80) + '-c'})
+                    {"asset_url": (!i.asset_url.includes('=s' + ($scope.size || 80) + '-c'))? i.asset_url + '=s' + ($scope.size || 80) + '-c' : i.asset_url})
                   });
                 $scope.selectedImage = 0;
                 if($scope.scrolling)
                   $timeout(function(){$scope.scrollImage(1,true)},2000);
                 } catch(e) {}
             });
-          }
+           }
           }
         );
 
