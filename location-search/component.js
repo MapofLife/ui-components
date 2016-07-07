@@ -64,6 +64,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
         $scope.selectRegionType = function(type) {
           if(type&&type.dataset_id) {
             var lang = $translate.use();
+            $scope.regionTypes.selected = type;
             $state.transitionTo(
               $state.current,
               {"regiontype":type.type,"lang":$translate.use()},
