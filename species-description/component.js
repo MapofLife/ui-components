@@ -27,8 +27,8 @@ angular.module('mol.species-description',['mol-species-description-templates'])
               "canceller":$scope.canceller
             }).then(
               function(response) {
-                $scope.model = response.data[0].info.filter(function(i){return i.lang === lang})[0]
-                   || response.data[0].info[0];
+                $scope.model = (response.data[0].info) ? response.data[0].info.filter(function(i){return i.lang === lang})[0]
+                   || response.data[0].info[0]: {};
               }
             );
           }

@@ -1,7 +1,7 @@
 angular.module('mol.location-search',['mol-location-search-templates'])
 .directive('molLocationSearch', [
-  'molApi','$state','$q',
-  function(molApi,$state,$q) {
+  'molApi','$state','$q','$translate',
+  function(molApi,$state,$q,$translate) {
     return {
       restrict: 'E',
       scope: false,
@@ -57,7 +57,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
           if(type&&type.dataset_id) {
             $state.transitionTo(
               $state.current,
-              {"regiontype":type.type},
+              {"regiontype":type.type,"lang":$translate.use()},
               {"notify":false,"inherit":true,"reload":false}
             );
              molApi({
@@ -66,7 +66,9 @@ angular.module('mol.location-search',['mol-location-search-templates'])
               "canceller": $scope.canceller,
               "loading": true
             }).success(function(response) {
-              $scope.regions.available = response;
+              $scope.regions.available = response.filter(
+                function(r) {return r.download}
+              );
               angular.forEach(
                 response,
                 function(region) {

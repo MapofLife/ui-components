@@ -1,4 +1,4 @@
-<script type="text/ng-template" id="ac-region-template.html">
+<!--<script type="text/ng-template" id="ac-region-template.html">
 	<a class="searchResult">
 	    <span class="commonName" ng-bind-html="match.label.name | uibTypeaheadHighlight:query"></span>
 	</a>
@@ -13,4 +13,13 @@
 	typeahead-wait-ms="500"
 	uib-typeahead="region for region in regions.available | filter:$viewValue | limitTo:20"
 	typeahead-on-select="selectRegion($model)"
-	typeahead-template-url="ac-region-template.html">
+	typeahead-template-url="ac-region-template.html">-->
+	<style type="text/css">mol-location-search .form-control {max-width:158px; min-width: 158px;}</style>
+	<ui-select ng-model="regions.selected" style="max-width:158px;min-width:158px;" on-select="selectRegion($model)">
+	    <ui-select-match placeholder="Select a region...">
+	        <span ng-bind="$select.selected.name"></span>
+	    </ui-select-match>
+	    <ui-select-choices repeat="region in (regions.available | filter: $select.search) track by region.region_id">
+	        <span ng-bind="region.name"></span>
+	    </ui-select-choices>
+	</ui-select>
