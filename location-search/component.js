@@ -1,7 +1,7 @@
 angular.module('mol.location-search',['mol-location-search-templates'])
 .directive('molLocationSearch', [
-  'molApi','$state','$q','$translate',
-  function(molApi,$state,$q,$translate) {
+  'molApi','$state','$q','$translate','$rootScope',
+  function(molApi,$state,$q,$translate,$rootScope) {
     return {
       restrict: 'E',
       scope: false,
@@ -20,6 +20,14 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             available: [],
             selected: undefined
         }
+
+
+        $rootScope.$on(
+          '$translateChangeSuccess',
+          function(e) {
+            $scope.selectRegionType($scope.regionTypes.selected);
+          }
+        )
 
       /*  molApi({
            "canceller": $scope.canceller,
@@ -55,6 +63,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
 
         $scope.selectRegionType = function(type) {
           if(type&&type.dataset_id) {
+            var lang = $translate.use();
             $state.transitionTo(
               $state.current,
               {"regiontype":type.type,"lang":$translate.use()},
@@ -62,7 +71,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             );
              molApi({
               "service":"spatial/regions/list",
-              "params":{"dataset_id" : type.dataset_id},
+              "params":{"dataset_id" : type.dataset_id, "lang":lang},
               "canceller": $scope.canceller,
               "loading": true
             }).success(function(response) {
@@ -73,7 +82,9 @@ angular.module('mol.location-search',['mol-location-search-templates'])
                 response,
                 function(region) {
                   try{
-                    if(region.name.toLowerCase()===$state.params.region.toLowerCase()){
+                    if(($scope.regions.selected && region.region_id === $scope.regions.selected.region_id) || (
+                      $scope.regions.selected === undefined &&
+                        region.name.toLowerCase()===$state.params.region.toLowerCase())){
                       $scope.selectRegion(region);
                     }
                   }catch(e){}
