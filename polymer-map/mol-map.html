@@ -1,0 +1,30 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/google-map/google-map.html">
+
+<dom-module id="mol-map">
+  <style>
+    google-map {
+      @apply(--layout-fit);
+    }
+
+    .side-drawer ::content .content {
+      padding: 20px;
+      padding-top: 10px;
+    }
+
+    .side-drawer ::content .header {
+      padding-top: 10px;
+      padding-left: 5px;
+    }
+  </style>
+  <template>
+    <google-map map="{{gMap_}}"
+                latitude="{{lat_}}"
+                longitude="{{lon_}}"
+                zoom="{{zoom_}}"
+                map-type="{{baseLayerId_}}"
+                on-google-map-ready="handleGoogleMapReady_">
+    </google-map>
+  </template>
+  <script src="mol-map.js"></script>
+</dom-module>
