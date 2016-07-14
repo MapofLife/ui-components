@@ -1,5 +1,5 @@
 angular.module('mol.api',[])
-  .factory('molApi', ['$rootScope','$http', function($rootScope,$http, molApiVersion) {
+  .factory('molApi', ['molConfig','$http', function(molConfig,$http, molApiVersion) {
   		return function() {
         var args,canceller;
         if (arguments.length == 1 && typeof arguments[0] === "object") {
@@ -21,7 +21,7 @@ angular.module('mol.api',[])
   				method:'JSONP',
   				url: '//{0}/{1}/{2}'.format(
             args.url || 'api.mol.org',
-            args.version || $rootScope.molConfig.api || '1.0',
+            args.version || molConfig.api || '1.0',
             args.service || ''),
   				params: angular.extend(args.params || {}, {callback: 'JSON_CALLBACK'}),
   				withCredentials: args.creds || false,
