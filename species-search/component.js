@@ -53,7 +53,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         molApi({
            "canceller": $scope.canceller,
            "loading": true,
-           "service" : "spatial/regions/taxa",
+           "service" : "spatial/regions/species",
            "params" : {
              "region_id":region_id,
              "lang":$translate.use()
@@ -67,11 +67,15 @@ angular.module('mol.species-search',['mol-species-search-templates'])
                 results.data,
                 function(result) {
                   groups.push(
-                    {label: result.title, value: result.taxa}
+                    {label: result.title,
+                     value: result.taxa,
+                     species: result.species,
+                     sortby: result.sortby}
                   )
                 }
               );
               $scope.groups.available = groups;
+              $scope.$parent.groups = groups;
             }
           );
         }
@@ -249,7 +253,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         if($state.params.scientificname) {
           $scope.selectSpecies($state.params.scientificname.replace(/_/g, ' '));
         } else {
-          $scope.randomSpecies();
+          //$scope.randomSpecies();
         };
 
 
