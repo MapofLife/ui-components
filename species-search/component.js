@@ -67,10 +67,9 @@ angular.module('mol.species-search',['mol-species-search-templates'])
                 results.data,
                 function(result) {
                   groups.push(
+                    angular.copy(angular.extend(result,
                     {label: result.title,
-                     value: result.taxa,
-                     species: result.species,
-                     sortby: result.sortby}
+                     value: result.taxa}))
                   )
                 }
               );
