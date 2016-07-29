@@ -1,7 +1,7 @@
 angular.module('mol.species-wiki',['mol-species-wiki-templates'])
 .directive('molSpeciesWiki', [
-  'molApi','molApiVersion',
-  function(molApi,molApiVersion) {
+  'molApi',
+  function(molApi) {
     return {
       restrict: 'E',
       scope: {
