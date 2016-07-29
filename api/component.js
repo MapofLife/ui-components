@@ -1,5 +1,5 @@
 angular.module('mol.api',[])
-  .factory('molApi', ['molConfig','$http', function(molConfig,$http, molApiVersion) {
+  .factory('molApi', ['molConfig','$http', function(molConfig,$http) {
   		return function() {
         var args,canceller;
         if (arguments.length == 1 && typeof arguments[0] === "object") {
