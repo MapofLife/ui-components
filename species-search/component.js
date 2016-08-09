@@ -27,11 +27,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
 
         $rootScope.$on(
             '$stateChangeSuccess',function(e) {
-              if($state.params.scientificname &&
-                 $state.params.scientificname.replace('_',' ').toLowerCase()
-                    !==$scope.species.scientificname.toLowerCase()) {
-                       $scope.selectSpecies($state.params.scientificname.replace('_',' '));
-              }
+              $scope.selectSpecies($state.params.scientificname.replace('_',' '));
             }
         );
         $scope.canceller = $q.defer();
@@ -88,7 +84,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
                 }
               );
               $scope.groups.available = groups;
-              $scope.$parent.groups = groups;
+              $scope.$parent.groups = $scope.groups;
             }
           );
         }

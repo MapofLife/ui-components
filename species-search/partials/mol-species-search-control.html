@@ -2,17 +2,19 @@
     <td>
     <select style="max-width:158px;width:158px;"
             placeholder="Select a group..."
-            class="form-control" ng-model="groups.selected"
-            ng-options="group.value as group.label | capitalize for group in groups.available">
-            <option selected disabled>Select a group</option>
+            class="form-control" ng-model="groups.selectedIndex"
+            ng-change="groups.selected = groups.available[groups.selectedIndex].taxa">
             <option ng-value="null">All groups</option>
+            <option
+              ng-value="$index"
+              ng-repeat="group in groups.available">{{group.label | capitalize}}</option>
     </select>
     </td>
     <td><span class="form-group">
           <div ng-include="'mol-species-search-autocomplete.html'" style="position:relative"></div>
     </span></td>
-    <td ng-show="!$state.params.embed">
+    <!--<td ng-show="!$state.params.embed">
       <button type="button" ng-click="randomSpecies()"
         class="random top_button btn btn-default">Pick Random</button>
-    </td>
+    </td>-->
 </tr></table>
