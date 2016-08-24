@@ -1,13 +1,20 @@
-<table class="search"><tr>
-    <!--<td>
-    <select
-            class="form-control"
-            ng-model="regionTypes.selected"
-            ng-options="type as type.title | capitalize for type in regionTypes.available">
-    </select>
-  </td>-->
-    <td><i ng-click="global()" uib-tooltip="Zoom to global scope." style="color:#ffffff" class="clickable fa fa-globe fa-2x"></i></td>
-    <td><span class="form-group">
-          <div ng-include="'mol-location-search-autocomplete.html'"></div>
-    </span></td>
-</tr></table>
+<table class="search">
+  <tr>
+    <td><i ng-click="global()"
+        uib-tooltip="Zoom to global scope."
+        style="color:#ffffff" class="clickable fa fa-globe fa-2x"></i></td>
+
+    <td>
+      <select
+        class="form-control"
+        ng-model="regionTypes.selected"
+        ng-options="type as type.title | capitalize for type in regionTypes.available">
+      </select>
+    </td>
+    <td>
+      <span class="form-group">
+        <div ng-include="'mol-location-search-autocomplete.html'"></div>
+      </span>
+    </td>
+  </tr>
+</table>

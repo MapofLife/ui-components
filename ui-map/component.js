@@ -12,10 +12,12 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 						this.getTile = getTile;
 						uiGmapGoogleMapApi.then(
 							function(maps) {
-								self.tileSize = new google.maps.Size(256, 256)});
+								self.tileSize = new google.maps.Size(256, 256);
+							}
+						);
 						this.name = overlay.type;
 						this.overlay = overlay;
-						this.index= overlay.index;//Math.round(Math.random()*1000);
+						this.index= overlay.index; //Math.round(Math.random()*1000);
 						this.refresh= true;
 						this.opacity= overlay.opacity;
 						this.maxZoom= 10;
@@ -34,11 +36,11 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 							 }
 
 						function getTile (c,z,d) {
-
-								var img = document.createElement('img'),div = document.createElement('div'),
-									tile_url = getTileUrl(c,z,this.overlay.tile_url),
-									grid_url,
-									grid = self.utfGrid;//s[type];
+								var img = document.createElement('img'),
+										div = document.createElement('div'),
+										tile_url = getTileUrl(c,z,this.overlay.tile_url),
+										grid_url,
+										grid = self.utfGrid;//s[type];
 
 									try{
 										if('{0}'.format(this.overlay.grid_url) !== 'null') {
@@ -64,9 +66,9 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 
 
 								img.style.opacity = this.opacity;
-								img.width=div.style.width=this.tileSize.width;
-								img.height=div.style.width=this.tileSize.height;
-
+								img.width = div.style.width = this.tileSize.width;
+								img.height = div.style.width = this.tileSize.height;
+  
 
 								if(tile_url) {
 									img.onload = function(e) {

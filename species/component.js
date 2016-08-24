@@ -1,18 +1,11 @@
-angular.module('mol.species-search',['mol-species-search-templates'])
-.directive('molSpeciesSearch',
-  function() {
-    return {
-      restrict: 'E',
-      scope: false,
-      transclude: false,
-      templateUrl: 'mol-species-search-control.html',
-      controller: ['$scope','molApi','$state','$q','$translate','$rootScope',
-       function($scope, molApi,$state,$q,$translate,$rootScope) {
-
+angular.module('mol.species-service',[])
+  .service('molSpeciesService', [
+    'molApi', '$translate', '$rootScope',
+    function(molApi, $translate, $rootScope) {
+      return function(scientificname, region_id, lang) {
         var regionid = undefined;
         try{
           regionid = $scope.$parent.region.dataset_id} catch(e) {};
-
 
         $rootScope.$on(
             '$translateChangeSuccess',function(e) {
@@ -23,26 +16,15 @@ angular.module('mol.species-search',['mol-species-search-templates'])
                 $scope.species.taxonomy.en_name;
             }
         );
-        $scope.canceller = $q.defer();
-
-        $rootScope.$on(
-            '$stateChangeSuccess',function(e) {
-              $scope.selectSpecies($state.params.scientificname.replace('_',' '));
-            }
-        );
-        $scope.canceller = $q.defer();
-
-
 
         //search for a new species in the search bar
         $scope.searchSpecies = function(term) {
           //$scope.canceller.resolve();
-
           return molApi({
             "service":"species/groupsearch",
             "params" : {
               "query": term,
-              "group": ($scope.groups.selected !== 'any') ? $scope.groups.selected : undefined,
+              "group": $scope.groups.selected,
               "regionid": $scope.region.region_id,
               "lang": $translate.use()
             },
@@ -63,7 +45,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         molApi({
            "canceller": $scope.canceller,
            "loading": true,
-           "service" : (region_id) ? "spatial/regions/species2" : "species/availabletaxa",
+           "service" : "spatial/regions/species2",
            "params" : {
              "region_id":region_id,
              "lang":$translate.use()
@@ -77,21 +59,19 @@ angular.module('mol.species-search',['mol-species-search-templates'])
                 results.data,
                 function(result) {
                   groups.push(
-                    angular.copy(angular.extend(result,
                     {label: result.title,
-                     value: result.taxa}))
+                     value: result.taxa,
+                     species: result.species,
+                     sortby: result.sortby}
                   )
                 }
               );
               $scope.groups.available = groups;
-              $scope.$parent.groups = $scope.groups;
+              $scope.$parent.groups = groups;
             }
           );
         }
-
-
-
-
+s
         $scope.selectSpecies = function(scientificname) {
          if(scientificname==='') {
            $scope.randomSpecies();
@@ -262,10 +242,10 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         if($state.params.scientificname) {
           $scope.selectSpecies($state.params.scientificname.replace(/_/g, ' '));
         } else {
-          //$scope.randomSpecies();
+          $scope.randomSpecies();
         };
 
 
       }]
     };
-});
+}]);

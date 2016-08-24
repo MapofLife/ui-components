@@ -26,10 +26,7 @@ angular.module('mol.species-images',['mol-species-images-templates'])
           }).then(
               function(response) {
                 try {
-                $scope.images = response.data[0].images.map(function(i) {
-                  return angular.extend(i,
-                    {"asset_url": (!i.asset_url.includes('=s' + ($scope.size || 80) + '-c'))? i.asset_url + '=s' + ($scope.size || 80) + '-c' : i.asset_url})
-                  });
+                $scope.images = response.data[0].images;
                 $scope.selectedImage = 0;
                 if($scope.scrolling)
                   $timeout(function(){$scope.scrollImage(1,true)},2000);

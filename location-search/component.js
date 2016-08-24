@@ -29,31 +29,44 @@ angular.module('mol.location-search',['mol-location-search-templates'])
           }
         )
 
-      /*  molApi({
+      molApi({
            "canceller": $scope.canceller,
            "loading": true,
            "service" : "spatial/regions/types",
            "creds" : true,
         }).then(
             function(response) {
-              $scope.regionTypes.available = response.data;
+              var defaultType = ($state.params.regiontype || 'global').toLowerCase();
+              console.log($state.params.regiontype);
+              console.log(defaultType);
+              $scope.regionTypes.available = [{
+                bnds: [
+                  -180,-90,180,90
+                ],
+                name: "Global",
+                title: "Global",
+                type: "global",
+                region_id: "-"
+              }]
+                .concat(response.data);
               angular.forEach(
                 response.data,
                 function(type) {
                   try {
-                  if(type.type.toLowerCase()==='countries' ){//$state.params.regiontype.toLowerCase()*{
-                    $scope.regionTypes.selected = type;
+                  if(type.type.toLowerCase() === defaultType) {
+                      $scope.selectRegionType(type);
                   }} catch(e) {}
                 });
             }
-          );*/
+        )
 
         $scope.global = function() {
             $scope.selectRegion({
               bnds: [
                 -180,-90,180,90
               ],
-              name: "",
+              name: "Global",
+              title: "Global",
               type: "global"
             });
 
@@ -64,7 +77,12 @@ angular.module('mol.location-search',['mol-location-search-templates'])
         $scope.selectRegionType = function(type) {
           if(type&&type.dataset_id) {
             var lang = $translate.use();
+            if($scope.regions.available.indexOf($scope.regions.selected)==-1) {
+              $scope.regions.selected = undefined;
+            };
+
             $scope.regionTypes.selected = type;
+            $scope.$parent.region = type;
             $state.transitionTo(
               $state.current,
               {"regiontype":type.type,"lang":$translate.use()},
@@ -76,9 +94,9 @@ angular.module('mol.location-search',['mol-location-search-templates'])
               "canceller": $scope.canceller,
               "loading": true
             }).success(function(response) {
-              $scope.regions.available = response.filter(
+              $scope.regions.available = response;/*.filter(
                 function(r) {return r.download}
-              );
+              );*/
               angular.forEach(
                 response,
                 function(region) {
@@ -112,13 +130,6 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             }
           }
         );
-
-        $scope.selectRegionType({
-          "type":"countries",
-          "dataset_id":"e9707baa-46e2-4ec4-99b6-86b1712e02de"}
-
-        )
-
       }
     };
 }]);
