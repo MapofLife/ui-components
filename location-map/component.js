@@ -17,8 +17,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
 
 
       },
-      controller: function($scope,$state, $http, $element, leafletData, molApiX) {
-
+      controller: function($scope,$state, $http, $element, leafletData) {
 
         addResizeListener(
           $element.context,
@@ -28,7 +27,6 @@ angular.module('mol.location-map',['mol-location-map-templates'])
               map.invalidateSize();
             }
           );});
-
 
         angular.extend($scope,
           {
@@ -45,10 +43,11 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                 zoom: 2
               },
               controls : {
-                scale:true,
+
                 layers:true,
-                draw:{},
-                custom:[]
+                //draw:{},
+                scale:true,
+                //custom:[]
               },
               paths : {},
               bounds : {},
@@ -103,7 +102,6 @@ angular.module('mol.location-map',['mol-location-map-templates'])
             $scope.bounds = theBounds;
         };
 
-
         $scope.getBounds = function(region) {
               if (region.extent) {
                   return leafletBoundsHelpers.createBoundsFromArray([
@@ -111,17 +109,29 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                     [region.extent.coordinates[0][0][1], region.extent.coordinates[0][0][0]]
                 ]);
               }
-
           }
 
+          /**
+           * case 1:
+           *   if regionId available, draw layer with selected region
+           * case 2
+           *   if lat and lng available, draw a point with a radius
+           * case 3:
+           *   if geojson available, draw the geojson polygon (future)
+           * case 4:
+           *   if regionType (only) available, draw all regions for that type
+           */
           $scope.$watch(
               'constraints.applied',
               function(newValue, oldValue) {
                   if (newValue) {
                     $scope.canceller.resolve();
                     $scope.canceller = $q.defer();
-                    $scope.updateMap(angular.extend(angular.copy(newValue),
-                      {"palette":$scope.constraints.palette,"region":$scope.constraints.region}));
+                    $scope.updateMap(
+                      angular.extend(
+                        angular.copy(newValue),
+                          {"palette":$scope.constraints.palette,
+                          "region":$scope.constraints.region}));
                 }
               },true
           );
@@ -131,22 +141,20 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                   if (newValue) {
                     $scope.canceller.resolve();
                     $scope.canceller = $q.defer();
-                    $scope.updateMap(angular.extend(angular.copy($scope.constraints).applied,{"palette":$scope.constraints.palette,"region":$scope.constraints.region}));
+                    $scope.updateMap(
+                      angular.extend(
+                        angular.copy($scope.constraints)
+                          .applied, {
+                            "palette": $scope.constraints.palette,
+                            "region": $scope.constraints.region
+                          }));
                 }
               },true
           );
           $scope.$watch(
-            'constraints.region.type',
+            'constraints.outline',
             function(n,v){
-              if(n) {
-                try {
-                  if(n==='global') {
-                    $scope.layers.overlays.regionBoundary.visible=false;
-                  } else {
-                    $scope.layers.overlays.regionBoundary.visible=true;
-                  }
-                } catch (e) {}
-              }
+              $scope.layers.overlays.regionBoundary.visible=n;
             }
           )
 
@@ -155,10 +163,40 @@ angular.module('mol.location-map',['mol-location-map-templates'])
               function(newValue, oldValue) {
                   if (newValue) {
                     $scope.updateBounds();
-
                   }
                 },true
           );
+
+        $scope.addHillshade = function() {
+          $http({
+              "withCredentials": false,
+              "method": "GET",
+              "url": "/api/hillshade"
+          }).then(
+              function(result, status, headers, config) {
+
+                  $scope.layers.overlays.hillshade = {
+                      type: "xyz",
+                      url: "https://earthengine.googleapis.com/map/{0}/{z}/{x}/{y}?token={1}"
+                          .format(result.data.id,result.data.token),
+                      layerOptions: {
+                          attribution: '©2015 Map of Life',
+                          continuousWorld: false
+                      },
+                      layerParams: {
+                               showOnSelector: true,
+
+                               transparent: true
+                      },
+                      name: 'Hillshade',
+                      opacity: 0.8,
+                      refresh: true,
+                      errorTileUrl: '/app/img/blank_tile.png',
+                      visible: true
+                  };
+              }
+          );
+        }
 
 
 
@@ -168,7 +206,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
           $http({
               "withCredentials": false,
               "method": "POST",
-              "url": "/location/api/mountain_region/map",
+              "url": "/api/mountain_region/map",
               "data": constraints,
               "timeout" : $scope.canceller.promise
           }).then(
@@ -183,9 +221,8 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                           continuousWorld: false
                       },
                       layerParams: {
-                               showOnSelector: false,
-
-                               //transparent: false
+                        showOnSelector: false,
+                        //transparent: false
                       },
                       name: 'Selected regions',
                       opacity: 1,
@@ -200,25 +237,32 @@ angular.module('mol.location-map',['mol-location-map-templates'])
 
         $scope.updateBounds = function() {
            var bounds = null;
-           angular.forEach(
-             $scope.constraints.applied.regions,
-             function(region) {
-               var extent = JSON.parse(region.extent),
-                   regionBounds = L.geoJson(extent).getBounds();
-               if(!bounds) {
-                 bounds = regionBounds;
-               } else {
-                 bounds.extend(regionBounds);
+           if($scope.constraints.applied.regions.length>0) {
+             angular.forEach(
+               $scope.constraints.applied.regions,
+               function(region) {
+                 var extent = JSON.parse(region.extent),
+                     regionBounds = L.geoJson(extent).getBounds();
+                 if(!bounds) {
+                   bounds = regionBounds;
+                 } else {
+                   bounds.extend(regionBounds);
+                 }
+                 $scope.bounds = {
+                   southWest: bounds.getSouthWest(),
+                   northEast: bounds.getNorthEast()
+                 }
+                 $scope.constraints.region.bounds = $scope.bounds;
 
                }
-               $scope.bounds = {
-                 southWest: bounds.getSouthWest(),
-                 northEast: bounds.getNorthEast()
-               }
-               $scope.constraints.region.bounds = $scope.bounds;
-
+             );
+           } else {
+             bounds = L.geoJson($scope.constraints.region.extent).getBounds();
+             $scope.bounds = {
+               southWest: bounds.getSouthWest(),
+               northEast: bounds.getNorthEast()
              }
-           )
+           }
         }
 
         $scope.$on('leafletDirectiveMap.baselayerchange', function (ev, layer) {
@@ -285,50 +329,47 @@ angular.module('mol.location-map',['mol-location-map-templates'])
               $scope.selectRegion(args.data);
             }
         });
-              /*leafletData.getMap().then(function(map) {
-
-                  /*
-                  angular.extend($scope,{"selectedRegion":args.data});
-                  var template = angular.element(
-                    "<a class='clickable' ng-click='selectRegion()'>"+args.data.name+"</a>"),
-                      link = $compile(template),
-                      element = link($scope),
-                      popup = L.popup({
-                        autoPan:false,
-                        closeButton:true})
-                        .setLatLng(args.latlng)
-                        .setContent(element[0])
-                        .openOn(map);*/
 
 
+        $scope.$on("leafletDirectiveMap.utfgridMouseover", function(event, args) {
+            if (args.data != null) {
+              $scope.interactivity = args.data;
+            } else {
+              $scope.interactivity = undefined;
+            }
+        });
 
-
-                /*args.data.extent = angular.fromJson(args.data.extent);
-                $scope.constraints = angular.extend(
-                  $scope.constraints, {
-                    palette : 'tvz',
-                    region : {
-                    id: args.data.id,
-                    name: args.data.name,
-                    type: 'mountain_region',
-                    bounds: $scope.getBounds(args.data)
-                }});
-
-                $scope.bounds = $scope.getBounds(args.data);
-
-            });
-
-*/
 
       $http({
           "withCredentials": false,
           "method": "POST",
-          "url": "https://mol.cartodb.com/api/v1/map/named/display_region",
+          "url": "https://mol.cartodb.com/api/v1/map/named/gmba-terrain-map",
           "data": {"type":"mountain_region"}
 
       }).then(
           function(result, status, headers, config) {
-              $scope.layers.overlays.regionBoundary = {
+             $scope.layers.overlays.regionBoundary = {
+                   type: "xyz",
+                   url: "//d3dvrpov25vfw0.cloudfront.net/api/v1/map/{0}/{z}/{x}/{y}.png"
+                       .format(result.data.layergroupid),
+                   layerOptions: {
+                       attribution: '©2015 Map of Life',
+                       continuousWorld: false
+                   },
+                   layerParams: {
+                            showOnSelector: false,
+                   },
+                   name: "regionGrid",
+                   opacity: 0.8,
+                   refresh: true,
+                   doRefresh: true,
+                   errorTileUrl: '/app/img/blank_tile.png',
+                   visible: $scope.constraints.outline,
+                   key: result.data.layergroupid,
+                   user: 'mol',
+                   layer: '0'
+                 };
+              $scope.layers.overlays.regionBoundaryGrid = {
                      type: "utfGrid",
                      url: "//d3dvrpov25vfw0.cloudfront.net/api/v1/map/{0}/0/{z}/{x}/{y}.grid.json?callback={cb}"
                          .format(result.data.layergroupid),
@@ -349,108 +390,11 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                      user: 'mol',
                      layer: '0'
               };
-
-              //if ($scope.constraints.region.bounds) {
-                  //$scope.bounds = $scope.constraints.region.bounds;
-                  /*$scope.constraints.region = angular.extend(constraints.region, {
-                      bounds: getBounds(constraints.region)
-                  });*/
-              //}
           }
       );
 
-    /*  $http({
-          "withCredentials": false,
-          "method": "POST",
-          "url": "/api/mountain_region/map",
-          "data": {"palette":"region"}
-      }).then(
-          function(result, status, headers, config) {
+      $scope.addHillshade();
 
-              $scope.layers.overlays.allRegions = {
-                  type: "xyz",
-                  url: "https://earthengine.googleapis.com/map/{0}/{z}/{x}/{y}?token={1}"
-                      .format(result.data.id,result.data.token),
-                  layerOptions: {
-                      attribution: '©2015 Map of Life',
-                      continuousWorld: false
-                  },
-                  layerParams: {
-                           showOnSelector: true,
-
-                           //transparent: false
-                  },
-                  name: 'All mountain regions',
-                  opacity: 1,
-                  refresh: true,
-                  doRefresh: true,
-                  errorTileUrl: '/app/img/blank_tile.png',
-                  visible: true
-              };
-          }
-      );
-*/
-      /*  $scope.$on("leafletDirectiveMap.utfgridMouseover",
-          function(event, args) {
-            if (args.data != null ) {
-              $scope.statistics.hover = args.data.name;
-              leafletData.getMap().then(function(map) {
-                  $scope.popup = L.popup({
-                    autoPan:false,
-                    closeButton:false})
-                      .setLatLng(args.latlng)
-                      .setContent(args.data.name)
-                      .openOn(map);
-                 }
-              );
-            }
-        });
-        $scope.$on("leafletDirectiveMap.utfgridMouseout",
-          function(event, args) {
-            if (args.data != null ) {
-              $scope.statistics.hover = undefined;
-              $scope.popup = undefined;
-            }
-        });*/
-      /*  leafletData.getMap().then(function(map) {
-               leafletData.getLayers().then(function(baselayers) {
-                  var
-                      drawControl = new L.Control.Draw({
-                      edit: {
-                          featureGroup: drawnItems,
-                          edit: false,
-                          remove: false
-                      },
-                      draw: {
-                        rectangle: false,
-                        polyline: false,
-                        circle: false,
-                        marker: false
-                      },
-                      position: 'topleft',
-
-                  });
-                  map.on("draw:editstart", function(e) {
-                    $scope.drawing = true;
-                  });
-
-                  map.on('draw:created', function (e) {
-                    var layer = e.layer, bounds = {
-                      "southWest": drawnItems.getBounds().getSouthWest(),
-                      "northEast": drawnItems.getBounds().getNorthEast()};
-
-                    //drawnItems.addLayer(layer);
-
-                    $scope.drawing =false;
-                    $scope.constraints.region = {
-                      "geojson" : layer.toGeoJSON(),
-                      "name" : null,
-                      "bounds" : bounds
-                    }
-                  });
-                  map.addControl(drawControl);
-               });
-           });*/
       }
     };
 }]);
