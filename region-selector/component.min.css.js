@@ -12,7 +12,7 @@
         }
     } else {
         try {
-            styleEl.innerHTML = cssText
+            styleEl.innerHTML = cssText;
         } catch(e) {
             styleEl.innerText = cssText;
         }

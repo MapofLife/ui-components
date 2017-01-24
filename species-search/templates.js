@@ -10,7 +10,7 @@ angular.module('mol-species-search-templates', []).run(['$templateCache', functi
     "				ng-style=\"{top: position().top+'px', right: position().right+'px'}\"\n" +
     "				role=\"listbox\" aria-hidden=\"false\"\n" +
     "				uib-typeahead-popup=\"\"\n" +
-    "				matches=\"matches\" active=\"activeIdx\"\n" +
+    "				matches=\"10000\" active=\"activeIdx\"\n" +
     "				select=\"select(activeIdx, evt)\"\n" +
     "				move-in-progress=\"moveInProgress\" query=\"query\"\n" +
     "\n" +

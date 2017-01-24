@@ -17,8 +17,8 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             available:[]};
 
         $scope.regions = {
-            available: [],
-            selected: undefined
+            available: [{name:'Select a region'}],
+            selected: {name:'Select a region'}
         }
 
 

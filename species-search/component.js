@@ -221,6 +221,11 @@ angular.module('mol.species-search',['mol-species-search-templates'])
            });
         }*/
 
+         $scope.$watch('region.region_id',function(n,o) {
+           console.log('yo');
+         });
+
+
         $scope.randomSpecies = function() {
           var group = null;
           try {group = $scope.groups.selected}
