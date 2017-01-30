@@ -27,7 +27,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
 
         $rootScope.$on(
             '$stateChangeSuccess',function(e) {
-              if($state.params.scientificname &&
+              if($state.params.scientificname && $scope.species &&
                  $state.params.scientificname.replace('_',' ').toLowerCase()
                     !==$scope.species.scientificname.toLowerCase()) {
                        $scope.selectSpecies($state.params.scientificname.replace('_',' '));
@@ -271,7 +271,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         if($state.params.scientificname) {
           $scope.selectSpecies($state.params.scientificname.replace(/_/g, ' '));
         } else {
-          $scope.randomSpecies();
+          // $scope.randomSpecies();
         };
 
 
