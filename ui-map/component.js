@@ -77,16 +77,23 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 										}
 									}
 									img.onerror = function(e) {
-										delete this.tiles[tile_url];
-										img.src = 'static/app/img/blank_tile.png';
-										if (Object.keys(this.tiles).length<1) {
+										if (self.tiles[tile_url] < self.maxTries) {
+											self.tiles[tile_url]++;
+										 	$timeout(function () {
+										 		this.src = tile_url;
+										 	}, 500);
+										} else {
 
-											$rootScope.$emit('cfpLoadingBar:completed');
+											delete self.tiles[tile_url];
+											img.src = 'static/app/img/blank_tile.png';
+											if (Object.keys(this.tiles).length<1) {
+												$rootScope.$emit('cfpLoadingBar:completed');
+											}
 										}
 									}
 
 									$rootScope.$emit('cfpLoadingBar:started');
-									this.tiles[tile_url] = "loading";
+									this.tiles[tile_url] = 0;
 
 									img.src = tile_url;
 									return img;
@@ -126,7 +133,7 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 						};
 						this.clearOverlays = function() {
 				        self.utfGrid={};
-				        self.overlayMapTypes = [null,null];
+				        self.overlayMapTypes =  [new OverlayMapType({tile_url:"",index:0}),new OverlayMapType({tile_url:"",index:1})];
 						}
 						this.removeOverlay = function(index) {
 							this.overlayMapTypes[index] = new OverlayMapType({tile_url:""});

@@ -12,14 +12,16 @@ angular.module('mol.api',[])
               params:  arguments[3],
               canceller: arguments[4].promise || {},
               loading: arguments[5],
-              creds: arguments[6]
+              creds: arguments[6],
+              protocol: arguments[7] || 'https',
           }
         }
         try {canceller = args.canceller.promise}
         catch(e) {canceller = undefined}
   			return $http({
   				method:'JSONP',
-  				url: '//{0}/{1}/{2}'.format(
+  				url: '{0}://{1}/{2}/{3}'.format(
+            (args.ssl) ? 'https' : 'http',
             args.url || 'api.mol.org',
             args.version || molConfig.api || '1.0',
             args.service || ''),
