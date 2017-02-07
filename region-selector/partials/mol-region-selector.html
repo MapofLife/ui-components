@@ -8,14 +8,15 @@
     <div class="modal-body region-selector">
         <div class="row">
             <div class="form-group col-md-6 col-xs-12">
-                <ui-select autofocus ng-model="$parent.regionType">
-                    <ui-select-match allow-clear placeholder="Select a Region Type">
+                <select placeholder="Select a Region Type" class="form-control" autofocus ng-model="$parent.regionType">
+                    <option disabled >
                         {{$select.selected.name}}
-                    </ui-select-match>
-                    <ui-select-choices repeat="reg in regionTypes | filter: $select.search">
-                        <small ng-bind-html="reg.name | highlight: $select.search | to_trusted"></small>
-                    </ui-select-choices>
-                </ui-select>
+                    </option>
+                    <option ng-repeat="reg in regionTypes | filter: $select.search"
+                      ng-bind-html="reg.name"
+                      value="reg"
+                    ></option>
+                </select>
             </div>
             <div class="form-group col-md-6 col-xs-12">
                 <input type="text" class="form-control"
