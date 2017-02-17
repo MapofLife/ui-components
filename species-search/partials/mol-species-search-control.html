@@ -3,8 +3,7 @@
     <select placeholder="Select a group..."
             class="form-control" ng-model="groups.selected"
             ng-options="group.value as group.label | capitalize for group in (groups.available || [])">
-            <option selected disabled>Select a group</option>
-            <option ng-value="null">All groups</option>
+            <option value=''>All groups</option>
     </select>
     </td>
     <td><span class="form-group">
