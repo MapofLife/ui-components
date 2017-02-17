@@ -1,9 +1,8 @@
 <table class="search"><tr>
     <td>
-    <select style="max-width:158px;width:158px;"
-            placeholder="Select a group..."
+    <select placeholder="Select a group..."
             class="form-control" ng-model="groups.selected"
-            ng-options="group.value as group.label | capitalize for group in groups.available">
+            ng-options="group.value as group.label | capitalize for group in (groups.available || [])">
             <option selected disabled>Select a group</option>
             <option ng-value="null">All groups</option>
     </select>
@@ -11,8 +10,4 @@
     <td><span class="form-group">
           <div ng-include="'mol-species-search-autocomplete.html'" style="position:relative"></div>
     </span></td>
-    <td ng-show="!$state.params.embed">
-      <button type="button" ng-click="randomSpecies()"
-        class="random top_button btn btn-default">Pick Random</button>
-    </td>
 </tr></table>

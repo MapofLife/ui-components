@@ -13,7 +13,7 @@ angular.module('mol.api',[])
               canceller: arguments[4].promise || {},
               loading: arguments[5],
               creds: arguments[6],
-              protocol: arguments[7] || 'https',
+              protocol: arguments[7] ,
           }
         }
         try {canceller = args.canceller.promise}
@@ -21,7 +21,7 @@ angular.module('mol.api',[])
   			return $http({
   				method:'JSONP',
   				url: '{0}://{1}/{2}/{3}'.format(
-            (args.ssl) ? 'https' : 'http',
+            args.protocol || 'https',
             args.url || 'api.mol.org',
             args.version || molConfig.api || '1.0',
             args.service || ''),

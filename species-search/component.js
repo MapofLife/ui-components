@@ -11,9 +11,13 @@ angular.module('mol.species-search',['mol-species-search-templates'])
 
         var regionid = undefined;
         try{
-          regionid = $scope.$parent.region.dataset_id} catch(e) {};
+          regionid = $scope.$parent.region.dataset_id
+        } catch(e) {};
 
+        if(!$scope.groups||!$scope.groups.selected) {
 
+          $scope.groups = {selected:'Select a group', available:[]};
+        }
         $rootScope.$on(
             '$translateChangeSuccess',function(e) {
               var lang = $translate.use();
@@ -35,9 +39,6 @@ angular.module('mol.species-search',['mol-species-search-templates'])
             }
         );
         $scope.canceller = $q.defer();
-
-
-
         //search for a new species in the search bar
         $scope.searchSpecies = function(term) {
           //$scope.canceller.resolve();
@@ -47,7 +48,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
             "params" : {
               "query": term,
               "group": ($scope.groups.selected !== 'any') ? $scope.groups.selected : undefined,
-              "regionid": $scope.region.region_id,
+              "regionid": ($scope.region)?$scope.region.region_id : undefined,
               "lang": $translate.use()
             },
             "canceller": $scope.canceller,

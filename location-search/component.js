@@ -6,7 +6,7 @@ angular.module('mol.location-search',['mol-location-search-templates'])
       restrict: 'E',
       scope: false,
       transclude: false,
-      templateUrl: 'mol-location-search-control.html',
+      //template: 'mol-location-search-control.html',
       controller: function($scope,$state) {
 
         $scope.canceller = $q.defer();
@@ -17,8 +17,8 @@ angular.module('mol.location-search',['mol-location-search-templates'])
             available:[]};
 
         $scope.regions = {
-            available: [{name:'Select a region'}],
-            selected: {name:'Select a region'}
+            available: [],
+            selected: undefined
         }
 
 
@@ -29,24 +29,6 @@ angular.module('mol.location-search',['mol-location-search-templates'])
           }
         )
 
-      /*  molApi({
-           "canceller": $scope.canceller,
-           "loading": true,
-           "service" : "spatial/regions/types",
-           "creds" : true,
-        }).then(
-            function(response) {
-              $scope.regionTypes.available = response.data;
-              angular.forEach(
-                response.data,
-                function(type) {
-                  try {
-                  if(type.type.toLowerCase()==='countries' ){//$state.params.regiontype.toLowerCase()*{
-                    $scope.regionTypes.selected = type;
-                  }} catch(e) {}
-                });
-            }
-          );*/
 
         $scope.global = function() {
             $scope.selectRegion({

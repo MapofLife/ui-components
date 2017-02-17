@@ -35,7 +35,19 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 
 						function getTile (c,z,d) {
 
-								var img = document.createElement('img'),div = document.createElement('div'),
+							function echoColor(e){
+								var imgData = ctx.getImageData(e.pageX, e.pageX, 1, 1);
+								red = imgData.data[0];
+								green = imgData.data[1];
+								blue = imgData.data[2];
+								alpha = imgData.data[3];
+								console.log(red + " " + green + " " + blue + " " + alpha);
+							}
+
+								var img = document.createElement('img'),
+										div = document.createElement('div'),
+										canvas = document.createElement("canvas"),
+										ctx = canvas.getContext("2d"),
 									tile_url = getTileUrl(c,z,this.overlay.tile_url),
 									grid_url,
 									grid = self.utfGrid;//s[type];
@@ -64,8 +76,8 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 
 
 								img.style.opacity = this.opacity;
-								img.width=div.style.width=this.tileSize.width;
-								img.height=div.style.width=this.tileSize.height;
+								canvas.width=img.width=div.style.width=this.tileSize.width;
+								canvas.height=img.height=div.style.width=this.tileSize.height;
 
 
 								if(tile_url) {
@@ -96,7 +108,15 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 									this.tiles[tile_url] = 0;
 
 									img.src = tile_url;
+									//return img;
+									canvas.onclick = this.click;
+
+
+
 									return img;
+
+									ctx = canvas.getContext("2d");
+									ctx.drawImage(img,0,0);
 								} else {
 									return div;
 								}
