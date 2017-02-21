@@ -1,8 +1,16 @@
 angular.module('mol-species-search-templates', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put("mol-species-search-autocomplete.html",
     "<script type=text/ng-template id=ac-template.html><a class=\"searchResult\">\n" +
-    "		<span class=\"sciName\" ng-bind-html=\"match.label.scientificname | uibTypeaheadHighlight:query\"></span>\n" +
-    "	  <span class=\"commonName\" ng-bind-html=\"((match.label.vernacular) ? match.label.vernacular : '') | uibTypeaheadHighlight:query\"></span>\n" +
+    "		<div class=\"row\">\n" +
+    "				<div class=\"col-sm-2\">\n" +
+    "						<img ng-src=\"https://mol.org/static/img/groups/taxa_{{match.label.taxa}}.png\"\n" +
+    "								err-src=\"https://mol.org/static/img/groups/taxa_all.png\" />\n" +
+    "				</div>\n" +
+    "				<div class=\"col-sm-10\">\n" +
+    "						<div class=\"commonName\" ng-bind-html=\"((match.label.vernacular) ? match.label.vernacular : '') | uibTypeaheadHighlight:query\"></div>\n" +
+    "						<div class=\"sciName\" ng-bind-html=\"match.label.scientificname | uibTypeaheadHighlight:query\"></div>\n" +
+    "				</div>\n" +
+    "		</div>\n" +
     "	</a></script><script type=text/ng-template id=popup-template.html><div class=\"custom-popup-wrapper\">\n" +
     "		 <ul class=\"dropdown-menu ng-isolate-scope\"\n" +
     "		 		ng-show=\"isOpen() && !moveInProgress\"\n" +
