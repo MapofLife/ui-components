@@ -11,8 +11,5 @@
     "grunt-contrib-cssmin": "~0.10.0",
     "grunt-html2js": "~0.3.3",
     "grunt-css2js": "~0.2.4"
-  },
-  "scripts": {
-    "postinstall": "bower install"
   }
 }

@@ -1,9 +1,26 @@
-<div class="modal-header">
-    <i class="fa fa-close close" ng-click="close()"></i>
-    <h3 class="modal-title">Please login</h3>
-</div>
-<div class="modal-body">
-    This feature is available for registered users. Please
-    <a ng-href="https://auth.mol.org/login?next={{location}}">login</a> or
-    <a ng-href="https://auth.mol.org/register?next={{location}}">register</a> to use this feature.
+<div class="modal-body" ng-swipe-left="Lightbox.nextImage()" ng-swipe-right="Lightbox.prevImage()">
+
+    <div class="lb-nav">
+        <a class="lb-prev" href="" ng-click="Lightbox.prevImage()"> <span>PREV</span> </a>
+        <a class="lb-next" href="" ng-click="Lightbox.nextImage()"> <span>NEXT</span> </a>
+    </div>
+
+    <div class="lightbox-image-container">
+        <img lightbox-src="{{Lightbox.imageUrl}}">
+    </div>
+
+    <div class="imageDetailsWrapper">
+        <div class="imageVoteButtons">
+            <span>
+                    <i ng-click="vote(1)" class="fa fa-2x fa-thumbs-up vote" ng-class="{voted: Lightbox.image.vote>0}"></i>
+            </span>
+            <span>
+                    <i ng-click="vote(-1)" class="fa fa-2x fa-thumbs-down vote" ng-class="{voted: Lightbox.image.vote<0}"></i>
+            </span>
+        </div>
+        <div class="imageCaption">
+            <span>{{ Lightbox.imageCaption }}</span>
+        </div>
+    </div>    
+
 </div>
