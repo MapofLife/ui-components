@@ -10,7 +10,7 @@
     </div>
 
     <div class="imageDetailsWrapper">
-        <div class="imageVoteButtons">
+        <div ng-show="loggedIn" class="imageVoteButtons">
             <span>
                     <i ng-click="vote(1)" class="fa fa-2x fa-thumbs-up vote" ng-class="{voted: Lightbox.image.vote>0}"></i>
             </span>
