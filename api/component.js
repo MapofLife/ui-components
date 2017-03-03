@@ -21,8 +21,8 @@ angular.module('mol.api',[])
   			return $http({
   				method:'JSONP',
   				url: '{0}://{1}/{2}/{3}'.format(
-            args.protocol || 'https',
-            args.url || 'api.mol.org',
+            args.protocol || molConfig.protocol || 'https',
+            args.url || molConfig.api_host || 'api.mol.org',
             args.version || molConfig.api || '1.0',
             args.service || ''),
   				params: angular.extend(args.params || {}, {callback: 'JSON_CALLBACK'}),
