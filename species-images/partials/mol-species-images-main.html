@@ -2,7 +2,7 @@
 class="species-images" ng-style="{width: (size) ? size + 'px' : '100%', margin: '10px', minWidth:'80px', maxWidth: '320px'}">
     <a href ng-click="fullsizeImage(selectedImage)">
       <img  
-        src="{{(images[selectedImage].asset_url || images[selectedImage].url)}}">
+        ng-src="{{(images[selectedImage].asset_url || images[selectedImage].url)}}">
     </a>
     <div uib-collapse="!showControls" ng-style="{width: size + 'px'}" class="image-controls">
       <i ng-show="loggedIn" ng-click="vote(1)" class="fa vote fa-thumbs-up fa-inverse"
