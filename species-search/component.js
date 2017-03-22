@@ -199,33 +199,6 @@ angular.module('mol.species-search',['mol-species-search-templates'])
           }
         };
 
-        /*$scope.selectSpecies = function(scientificname) {
-          var lang = $translate.use();
-          molApi({
-           "service":"species/info",
-           "params":{
-             "scientificname" : scientificname,
-             "lang" : lang
-           },
-           "canceller": $scope.canceller,
-           "loading": true
-         }).then(function(result) {
-            var s = result.data[0];
-            $scope.$parent.species = {
-              scientificname: s.scientificname,
-              common: s.commonname,
-              family: s.family.filter(function(f){return f.lang==lang})[0].name
-                || s.family[0].name
-
-            }
-
-           });
-        }*/
-
-         $scope.$watch('region.region_id',function(n,o) {
-           console.log('yo');
-         });
-
 
         $scope.randomSpecies = function() {
           var group = null;
