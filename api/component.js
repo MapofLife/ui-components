@@ -13,19 +13,21 @@ angular.module('mol.api',[])
               canceller: arguments[4].promise || {},
               loading: arguments[5],
               creds: arguments[6],
-              protocol: arguments[7] ,
+              protocol: arguments[7],
+              method: arguments[8]
           }
         }
         try {canceller = args.canceller.promise}
         catch(e) {canceller = undefined}
   			return $http({
-  				method:'JSONP',
+  				method: args.method || 'JSONP',
   				url: '{0}://{1}/{2}/{3}'.format(
             args.protocol || molConfig.protocol || 'https',
             args.url || molConfig.api_host || 'api.mol.org',
             args.version || molConfig.api || '1.0',
             args.service || ''),
   				params: angular.extend(args.params || {}, {callback: 'JSON_CALLBACK'}),
+          data: args.data || {},
   				withCredentials: args.creds || false,
   				cache: true,
   				timeout: canceller,
