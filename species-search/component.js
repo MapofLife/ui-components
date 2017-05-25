@@ -101,10 +101,102 @@ angular.module('mol.species-search',['mol-species-search-templates'])
          if(scientificname==='') {
            $scope.randomSpecies();
          } else {
-           
-              $scope.$parent.species = {scientificname: scientificname};
-            }
-          
+           molApi({
+            "service":"species/habitat",
+            "params":{
+              "id" : scientificname,
+              "lang" : $translate.use()
+            },
+            "canceller": $scope.canceller,
+            "loading": true
+            }).success(function(species) {
+
+              if(species == undefined) return;
+              if(species.prefs != undefined) {
+                if(species.prefs.habitats != undefined) {
+                  var bools = [];
+                    for(var i=0;i<17;i++) {bools.push(false);}
+                    try {
+                    species.prefs.habitats.split(',').forEach(
+                        function(h) {bools[parseInt(h)]=true}
+                    );
+                  } catch(e) {}
+                    species.prefs.habitats = bools;
+                    if(species.prefs.tree_cover_min==100) {
+                      species.prefs.tree_cover_min=50;
+                    }
+                }
+              }
+
+              species.refine = {};
+              species.protect = {};
+              species.maps = {};
+              species.updateMaps = true;
+              species.habitat = {
+                "stats": {
+                  "forest_b1": undefined,
+                  "forest_b0": undefined,
+                  "pop_se_b1": undefined,
+                  "area_se_b1": undefined,
+                  "area_conf_95_10": [undefined, undefined],
+                  "pop_b0": undefined,
+                  "pop_conf_95_10": [undefined, undefined],
+                  "area_b1": undefined,
+                  "area_b0": undefined,
+                  "forest_se_b1": undefined,
+                  "forest_percent_change": undefined,
+                  "pop_percent_change": undefined,
+                  "area_percent_change": undefined,
+                  "forest_conf_95_10": [undefined, undefined],
+                  "pop_b1": undefined
+                },
+                "area": [
+                  [2012, 0],
+                  [2003, 0],
+                  [2011, 0],
+                  [2001, 0],
+                  [2002, 0],
+                  [2010, 0],
+                  [2004, 0],
+                  [2005, 0],
+                  [2006, 0],
+                  [2007, 0],
+                  [2008, 0],
+                  [2009, 0]
+                ],
+                "forest": [
+                  [2012, 0],
+                  [2003, 0],
+                  [2011, 0],
+                  [2001, 0],
+                  [2002, 0],
+                  [2010, 0],
+                  [2004, 0],
+                  [2005, 0],
+                  [2006, 0],
+                  [2007, 0],
+                  [2008, 0],
+                  [2009, 0]
+                ],
+                "pop": [
+                  [2012, 0],
+                  [2003, 0],
+                  [2011, 0],
+                  [2001, 0],
+                  [2002, 0],
+                  [2010, 0],
+                  [2004, 0],
+                  [2005, 0],
+                  [2006, 0],
+                  [2007, 0],
+                  [2008, 0],
+                  [2009, 0]
+                ]
+              };
+              $scope.$parent.species = species;
+
+            });
+          }
         };
 
 
