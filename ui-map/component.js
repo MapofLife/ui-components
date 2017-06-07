@@ -165,7 +165,7 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 				        self.overlayMapTypes =  [new OverlayMapType({tile_url:"",index:0}),new OverlayMapType({tile_url:"",index:1})];
 						}
 						this.removeOverlay = function(index) {
-							this.overlayMapTypes[index] = new OverlayMapType({tile_url:""});
+							this.overlayMapTypes = []; //new OverlayMapType({tile_url:""});
 						}
 						this.setOverlay = function(overlay,index) {
 							this.overlayMapTypes[index]= new OverlayMapType(overlay);
@@ -218,6 +218,7 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 							}
 						 molUiMap.prototype.getInfoWindowModel = function(map,event,coords,data) {return $q.defer().promise},
 						 molUiMap.prototype.getGridData = function(map,coords) {
+							 		if (!this.overlayMapTypes[0]) {return}
 	 								var i, key, grid  = this.overlayMapTypes[0].utfGrid,
 	 										value, zoom = map.getZoom(),
 	 										numTiles = 1 << zoom,
