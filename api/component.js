@@ -20,7 +20,7 @@ angular.module('mol.api',[])
         try {canceller = args.canceller.promise}
         catch(e) {canceller = undefined}
         
-        jsonpCallback = { callback: 'JSON_CALLBACK' };
+        var jsonpCallback = { callback: 'JSON_CALLBACK' };
         if (angular.version.major == 1 && angular.version.minor > 5) {
           jsonpCallback = { jsonpCallbackParam: 'callback' };
         }
