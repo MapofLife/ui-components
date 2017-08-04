@@ -19,7 +19,8 @@ angular.module('mol.i18n',['mol-i18n-templates'])
               $scope.curLang = newLang;
               $state.transitionTo(
                 $state.current.name,
-                angular.extend($state.params,{lang:newLang})
+                angular.extend($state.params,{lang:newLang}),
+                {reload: true}
               );
             } else {
               $location.path('/'+newLang+$location.path());
