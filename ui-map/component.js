@@ -106,8 +106,8 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 										} else {
 
 											delete self.tiles[tile_url];
-											img.src = 'static/app/img/blank_tile.png';
-											if (Object.keys(this.tiles).length<1) {
+											img.src = (self.overlay.blank_tile || 'static/app/img/blank_tile.png');
+											if (this.tiles && Object.keys(this.tiles).length<1) {
 												$rootScope.$emit('cfpLoadingBar:completed');
 											}
 										}
