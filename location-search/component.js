@@ -1,39 +1,7 @@
 angular.module('mol.location-search',['mol-location-search-templates'])
 .factory('molRegionTypes', [
   function () {
-    return [{
-      "dataset_id": "e9707baa-46e2-4ec4-99b6-86b1712e02de",
-      "citation": "Global Administrative Areas. (2016). GADM database of Global Administrative Areas, version 2.8. http://www.gadm.org.",
-      "type": "countries",
-      "dataset_title": "Global Administrative Areas v 2.8",
-      "title": "Political boundaries",
-      "sort_by": "attributes->>'parent_id' DESC",
-      "mode": "global"
-    }, {
-      "dataset_id": "b7cc3596-5fce-4546-b583-b482520fc01f",
-      "citation": "Koerner C, Jetz W, Paulsen J, Payne D, Rudmann-Maurer K, Spehn E (In Press) A global inventory of mountains for bio-geographical applications. Alpine Botany.",
-      "type": "mountains",
-      "dataset_title": "GMBA Mountain Ranges",
-      "title": "Mountain Ranges",
-      "sort_by": "attributes->>'gmba_id'",
-      "download_text": "Species will usually only occur in a small portion of the mountain range, and the list may include lowland species with ranges only abutting the mountain region.",
-      "mode": "global"
-    }, {
-      "dataset_id": "3fc08de0-49e9-479d-95f4-42b2ad82f3bf",
-      "citation": "IUCN and UNEP-WCMC (2016), The World Database on Protected Areas (WDPA), February 2016, Cambridge, UK: UNEP-WCMC. Available at: www.protectedplanet.net.",
-      "type": "national_parks",
-      "dataset_title": "National Parks",
-      "title": "National Parks",
-      "mode": "local"
-    }, {
-      "dataset_id": "b9a90786-1ee6-4a69-a3fe-686ec6f8ad68",
-      "citation": "Global Administrative Areas. (2016). GADM database of Global Administrative Areas, version 2.8. http://www.gadm.org.",
-      "type": "kenya_counties",
-      "dataset_title": "Counties of Kenya",
-      "title": "Counties of Kenya",
-      "bnds": [33.9096, -4.7204, 41.9262, 5.0612],
-      "mode": "local"
-    }];
+    return [{"dataset_id": "3fc08de0-49e9-479d-95f4-42b2ad82f3bf", "citation": "IUCN and UNEP-WCMC (2016), The World Database on Protected Areas (WDPA), February 2016, Cambridge, UK: UNEP-WCMC. Available at: www.protectedplanet.net.", "type": "national_parks", "dataset_title": "National Parks", "title": "National Parks"}, {"dataset_id": "e9707baa-46e2-4ec4-99b6-86b1712e02de", "citation": "Global Administrative Areas. (2016). GADM database of Global Administrative Areas, version 2.8. http://www.gadm.org.", "type": "countries", "dataset_title": "Global Administrative Areas v 2.8", "title": "Political boundaries"}, {"dataset_id": "b9a90786-1ee6-4a69-a3fe-686ec6f8ad68", "citation": "Global Administrative Areas. (2016). GADM database of Global Administrative Areas, version 2.8. http://www.gadm.org.", "type": "kenya_counties", "dataset_title": "Counties of Kenya", "title": "Counties of Kenya"}, {"dataset_id": "b7cc3596-5fce-4546-b583-b482520fc01f", "citation": "K\u00f6rner C., Jetz W., Paulsen J., Payne D., Rudmann-Maurer K., Spehn E. M. (2016). A global inventory of mountains for bio-geographical applications. Alpine Botany. doi:10.1007/s00035-016-0182-6", "type": "mountains", "dataset_title": "GMBA Mountain Ranges", "title": "Mountain Ranges"}];
   }])
 .directive('molLocationSearch', [
   'molApi', '$state', '$q', '$translate', '$rootScope', 'molRegionTypes',

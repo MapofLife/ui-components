@@ -156,7 +156,8 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 				        self.overlayMapTypes =  [new OverlayMapType({tile_url:"",index:0}),new OverlayMapType({tile_url:"",index:1})];
 						}
 						this.removeOverlay = function(index) {
-							this.overlayMapTypes = []; //new OverlayMapType({tile_url:""});
+							this.overlayMapTypes[index] = 
+								new OverlayMapType({tile_url:"",index:index});
 						}
 						this.setOverlay = function(overlay,index) {
 							this.overlayMapTypes[index]= new OverlayMapType(overlay);

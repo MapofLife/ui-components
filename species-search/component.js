@@ -68,7 +68,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         molApi({
            "canceller": $scope.canceller,
            "loading": true,
-           "service" : (region_id) ? "spatial/regions/species2" : "species/availabletaxa",
+           "service" : "species/availabletaxa",
            "params" : {
              "region_id":region_id,
              "lang":$translate.use()
