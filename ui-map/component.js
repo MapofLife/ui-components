@@ -60,17 +60,26 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 												if(!grid[z]) {grid[z]={}};
 												if(!grid[z][c.x]) {grid[z][c.x]={}};
 												if(!grid[z][c.x][c.y]) {
-													$http({
-														url:'{0}?callback=JSON_CALLBACK'.format(grid_url),
-														method: 'JSONP',
-														ignoreLoadingbar:true
-													}).success(
-															function(data, status, headers, config) {
+													
+													// JSONP calls based on AngularJS version
+													if (angular.version.major == 1 && angular.version.minor < 6) {
+														$http({
+															url: '{0}?callback=JSON_CALLBACK'.format(grid_url),
+															method: 'JSONP',
+															ignoreLoadingbar: true
+														}).success(
+															function (data, status, headers, config) {
 																grid[z][c.x][c.y] = data;
 															}
-														).error(function(err) {});
+															).error(function (err) { });
+													} else {
+														$http.jsonp(grid_url, { jsonpCallbackParam: 'callback' })
+														.success(function (data) {
+															grid[z][c.x][c.y] = data;
+														});
 													}
 												}
+											}
 										}
 									} catch (e){}
 
@@ -97,8 +106,8 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 										} else {
 
 											delete self.tiles[tile_url];
-											img.src = 'static/app/img/blank_tile.png';
-											if (Object.keys(this.tiles).length<1) {
+											img.src = (self.overlay.blank_tile || 'static/app/img/blank_tile.png');
+											if (this.tiles && Object.keys(this.tiles).length<1) {
 												$rootScope.$emit('cfpLoadingBar:completed');
 											}
 										}

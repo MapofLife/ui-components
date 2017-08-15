@@ -19,6 +19,12 @@ angular.module('mol.api',[])
         }
         try {canceller = args.canceller.promise}
         catch(e) {canceller = undefined}
+        
+        var jsonpCallback = { callback: 'JSON_CALLBACK' };
+        if (angular.version.major == 1 && angular.version.minor > 5) {
+          jsonpCallback = { jsonpCallbackParam: 'callback' };
+        }
+
   			return $http({
   				method: args.method || 'JSONP',
   				url: '{0}://{1}/{2}/{3}'.format(
@@ -26,7 +32,7 @@ angular.module('mol.api',[])
             args.url || molConfig.api_host || 'api.mol.org',
             args.version || molConfig.api || '1.0',
             args.service || ''),
-  				params: (args.method !== 'POST') ? angular.extend(args.params || {}, {callback: 'JSON_CALLBACK'}): undefined,
+          params: (args.method !== 'POST') ? angular.extend(args.params || {}, jsonpCallback): undefined,
           data: args.data,
   				withCredentials: args.creds || false,
   				cache: true,
