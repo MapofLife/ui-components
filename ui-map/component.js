@@ -7,7 +7,7 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 				function OverlayMapType(overlay) {
 						var self = this;
 						overlay = angular.copy(overlay);
-					  this.show=true;
+					  	this.show=true;
 						this.tiles = {};
 						this.getTile = getTile;
 						uiGmapGoogleMapApi.then(
@@ -32,22 +32,13 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 								 }
 								 return u;
 							 }
-
+						function releaseTile(tile) {
+							console.log(tile);
+						}
 						function getTile (c,z,d) {
 
-							function echoColor(e){
-								var imgData = ctx.getImageData(e.pageX, e.pageX, 1, 1);
-								red = imgData.data[0];
-								green = imgData.data[1];
-								blue = imgData.data[2];
-								alpha = imgData.data[3];
-								console.log(red + " " + green + " " + blue + " " + alpha);
-							}
-
 								var img = document.createElement('img'),
-										div = document.createElement('div'),
-										canvas = document.createElement("canvas"),
-										ctx = canvas.getContext("2d"),
+									div = document.createElement('div'),
 									tile_url = getTileUrl(c,z,this.overlay.tile_url),
 									grid_url,
 									grid = self.utfGrid;//s[type];
@@ -83,10 +74,10 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 										}
 									} catch (e){}
 
-
+								img.style.zIndex = this.index;
 								img.style.opacity = this.opacity;
-								canvas.width=img.width=div.style.width=this.tileSize.width;
-								canvas.height=img.height=div.style.width=this.tileSize.height;
+								div.style.width=img.width=this.tileSize.width;
+								div.style.width=img.height=this.tileSize.height;
 
 
 								if(tile_url) {
@@ -98,11 +89,11 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 										}
 									}
 									img.onerror = function(e) {
-										if (self.tiles[tile_url] < self.maxTries) {
+										if (self.tiles[tile_url] < 3) {
 											self.tiles[tile_url]++;
 										 	$timeout(function () {
 										 		this.src = tile_url;
-										 	}, 500);
+											 }, 2000*Math.random());
 										} else {
 
 											delete self.tiles[tile_url];
@@ -117,15 +108,8 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 									this.tiles[tile_url] = 0;
 
 									img.src = tile_url;
-									//return img;
-									canvas.onclick = this.click;
-
-
-
 									return img;
 
-									ctx = canvas.getContext("2d");
-									ctx.drawImage(img,0,0);
 								} else {
 									return div;
 								}

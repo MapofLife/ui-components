@@ -48,7 +48,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
             "params" : {
               "query": term,
               "group": ($scope.groups.selected !== 'any') ? $scope.groups.selected : undefined,
-              "regionid": ($scope.region)?$scope.region.region_id : undefined,
+              "region_id": ($scope.region)?$scope.region.region_id : undefined,
               "lang": $translate.use()
             },
             "canceller": $scope.canceller,
@@ -72,6 +72,8 @@ angular.module('mol.species-search',['mol-species-search-templates'])
            "params" : {
              "region_id":region_id,
              "lang":$translate.use()
+
+             
            },
            "creds" : true,
         }).then(
