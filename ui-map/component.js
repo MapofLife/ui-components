@@ -92,7 +92,7 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 										if (self.tiles[tile_url] < 3) {
 											self.tiles[tile_url]++;
 										 	$timeout(function () {
-										 		this.src = tile_url;
+												 if (this) {this.src = tile_url;}
 											 }, 2000*Math.random());
 										} else {
 
