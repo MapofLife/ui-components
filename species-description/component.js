@@ -30,7 +30,11 @@ angular.module('mol.species-description',['mol-species-description-templates'])
                 $scope.model = (response.data[0].info) ? response.data[0].info.filter(function(i){return i.lang === lang})[0]
                    || response.data[0].info[0]: {};
               }
-            );
+            ).finally(function () {
+              // unset the canceller the subsequent requests work
+              // TODO: Make sure this is the proper way to do it.
+              $scope.canceller = undefined;
+            });
           }
         }
         $rootScope.$on('$translateChangeSuccess',function(e) {$scope.getDesc();});
