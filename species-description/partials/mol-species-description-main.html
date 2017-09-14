@@ -1,6 +1,7 @@
 {{model.content}}
-<span ng-show="model.content">
-		Source: <a
-		ng-href="http://wikipedia.org/wiki/{{scientificname.replace(' ','_')}}">
+<span ng-show="model.content" class="pull-right">
+	<br />
+		<span translate>source</span>: 
+		<a ng-href="http://{{model.lang}}.wikipedia.org/wiki/{{scientificname.replace(' ','_')}}" target="_blank">
 			Wikipedia</a>
 </span>
