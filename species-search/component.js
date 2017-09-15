@@ -21,10 +21,12 @@ angular.module('mol.species-search',['mol-species-search-templates'])
         $rootScope.$on(
             '$translateChangeSuccess',function(e) {
               var lang = $translate.use();
-              $scope.updateTaxa($scope.region.region_id);
-              $scope.species.common =
-                $scope.species.taxonomy[lang+'_name'] ||
-                $scope.species.taxonomy.en_name;
+              if ($scope.region && $scope.region.region_id) {
+                $scope.updateTaxa($scope.region.region_id);
+              }
+              // $scope.species.common =
+              //   $scope.species.family[0]['name'] ||
+              //   $scope.species.family[1]['name'];
             }
         );
         $scope.canceller = $q.defer();
@@ -99,7 +101,7 @@ angular.module('mol.species-search',['mol-species-search-templates'])
 
 
 
-        $scope.selectSpecies = function(scientificname) {
+        $scope.selectSpeciesHabitat = function(scientificname) {
          if(scientificname==='') {
            $scope.randomSpecies();
          } else {
@@ -197,6 +199,42 @@ angular.module('mol.species-search',['mol-species-search-templates'])
               };
               $scope.$parent.species = species;
 
+            });
+          }
+        };
+
+        $scope.selectSpecies = function (scientificname) {
+          if (scientificname === '') {
+            $scope.randomSpecies();
+          } else {
+            if ($scope.spcanceller) {
+              $scope.spcanceller.resolve();
+              $scope.spcanceller = undefined;
+            }
+            $scope.spcanceller = $q.defer();
+            molApi({
+              "service": "species/info",
+              "params": {
+                "scientificname": scientificname,
+                "lang": $translate.use()
+              },
+              "canceller": $scope.spcanceller,
+              "loading": true
+            }).then(function (response) {
+              if (!response.data || response.data.length == 0) return;
+              
+              var species = response.data[0];
+              species.prefs = {};
+              species.refine = {};
+              species.protect = {};
+              species.maps = {};
+              species.updateMaps = true;
+              species.habitat = {};
+              $scope.$parent.species = species;
+
+            }).finally(function() {
+              $scope.spcanceller.resolve();
+              $scope.spcanceller = undefined;
             });
           }
         };

@@ -1,8 +1,6 @@
 (function () {
     // component.min.css
-    var cssText = "" +
-"mol-species-search{margin-right:80px}mol-species-search .dropdown-menu{margin-left:-180px}";
-    // cssText end
+    var cssText = "mol-species-search{margin-right:80px}mol-species-search .dropdown-menu{margin-left:-180px}";
 
     var styleEl = document.createElement("style");
     document.getElementsByTagName("head")[0].appendChild(styleEl);
@@ -12,7 +10,7 @@
         }
     } else {
         try {
-            styleEl.innerHTML = cssText
+            styleEl.innerHTML = cssText;
         } catch(e) {
             styleEl.innerText = cssText;
         }

@@ -35,7 +35,7 @@
 <input type="text" class="form-control" style="min-width:258px;"
 	autocomplete="on"
 	ng-model="selected.value"
-	placeholder="Search for a species"
+	placeholder="{{ 'search_species' | translate }}"
 	uib-typeahead="species.scientificname as species for species in searchSpecies(($viewValue)?$viewValue:'.')"
 	typeahead-on-select="selectSpecies($model)"
 	typeahead-template-url="ac-template.html">

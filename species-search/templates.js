@@ -1,4 +1,4 @@
-angular.module('mol-species-search-templates', []).run(['$templateCache', function($templateCache) {
+angular.module('mol-species-search-templates', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put("mol-species-search-autocomplete.html",
     "<script type=text/ng-template id=ac-template.html><a class=\"searchResult\">\n" +
     "		<div class=\"row\">\n" +
@@ -24,7 +24,7 @@ angular.module('mol-species-search-templates', []).run(['$templateCache', functi
     "\n" +
     "				assign-is-open=\"assignIsOpen(isOpen)\" debounce=\"debounceUpdate\" template-url=\"ac-template.html\">\n" +
     "     </ul>\n" +
-    "  </div></script><input class=form-control style=min-width:258px autocomplete=on ng-model=selected.value placeholder=\"Search for a species\" uib-typeahead=\"species.scientificname as species for species in searchSpecies(($viewValue)?$viewValue:'.')\" typeahead-on-select=selectSpecies($model) typeahead-template-url=ac-template.html>");
+    "  </div></script><input class=form-control style=min-width:258px autocomplete=on ng-model=selected.value placeholder=\"{{ 'search_species' | translate }}\" uib-typeahead=\"species.scientificname as species for species in searchSpecies(($viewValue)?$viewValue:'.')\" typeahead-on-select=selectSpecies($model) typeahead-template-url=ac-template.html>");
   $templateCache.put("mol-species-search-control.html",
-    "<table class=search><tr><td><select placeholder=\"Select a group...\" class=form-control ng-model=groups.selected ng-options=\"group.value as group.label | capitalize for group in (groups.available || [])\"><option value>All groups</option></select></td><td><span class=form-group><div ng-include=\"'mol-species-search-autocomplete.html'\" style=position:relative></div></span></td></tr></table>");
+    "<table class=search><tr><td><select placeholder=\"Select a group...\" class=form-control ng-model=groups.selected ng-options=\"group.value as group.label | capitalize for group in (groups.available || [])\"><option value=\"\" translate>all_groups</option></select></td><td><span class=form-group><div ng-include=\"'mol-species-search-autocomplete.html'\" style=position:relative></div></span></td></tr></table>");
 }]);
