@@ -91,6 +91,10 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 									img.onerror = function(e) {
 										if (self.tiles[tile_url] < 3) {
 											self.tiles[tile_url]++;
+
+											// temporarily set the blank tile first
+											img.src = (self.overlay.blank_tile || 'static/app/img/blank_tile.png');
+											
 										 	$timeout(function () {
 												 if (this) {this.src = tile_url;}
 											 }, 2000*Math.random());
