@@ -93,7 +93,7 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 											self.tiles[tile_url]++;
 
 											// temporarily set the blank tile first
-											img.src = (self.overlay.blank_tile || 'static/app/img/blank_tile.png');
+											img.src = (self.overlay.blank_tile || 'https://cdn.mol.org/static/images/blank_tile.png');
 											
 										 	$timeout(function () {
 												 if (this) {this.src = tile_url;}
@@ -101,7 +101,7 @@ angular.module('mol.ui-map', ['uiGmapgoogle-maps'])
 										} else {
 
 											delete self.tiles[tile_url];
-											img.src = (self.overlay.blank_tile || 'static/app/img/blank_tile.png');
+											img.src = (self.overlay.blank_tile || 'https://cdn.mol.org/static/images/blank_tile.png');
 											if (this.tiles && Object.keys(this.tiles).length<1) {
 												$rootScope.$emit('cfpLoadingBar:completed');
 											}

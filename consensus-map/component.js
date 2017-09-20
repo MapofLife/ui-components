@@ -27,7 +27,7 @@ angular.module('mol.consensus-map',['mol-consensus-map-templates'])
                   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
                   continuousWorld: false
                 },
-                errorTileUrl: '/app/img/blank_tile.png'
+                errorTileUrl: 'https://cdn.mol.org/static/images/blank_tile.png'
               }
             },
             overlays: {}
@@ -64,7 +64,7 @@ angular.module('mol.consensus-map',['mol-consensus-map-templates'])
                       name: 'consensus',
                       opacity: 0.8,
                       refresh: true,
-                      errorTileUrl: '/app/img/blank_tile.png'
+                      errorTileUrl: 'https://cdn.mol.org/static/images/blank_tile.png'
                     }
                   }
                 );

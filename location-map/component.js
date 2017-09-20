@@ -64,7 +64,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                     continuousWorld: false
 
                 },
-                errorTileUrl: '/app/img/blank_tile.png'
+                errorTileUrl: 'https://cdn.mol.org/static/images/blank_tile.png'
             },
             satellite : {
                name: 'Satellite',
@@ -75,7 +75,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                    continuousWorld: false
 
                },
-               errorTileUrl: '/app/img/blank_tile.png'
+               errorTileUrl: 'https://cdn.mol.org/static/images/blank_tile.png'
             },
             terrain : {
                name: 'Terrain',
@@ -86,7 +86,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                    continuousWorld: false
 
                },
-               errorTileUrl: '/app/img/blank_tile.png'
+               errorTileUrl: 'https://cdn.mol.org/static/images/blank_tile.png'
             }
           },
           overlays: {}
@@ -191,7 +191,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                       opacity: 1,
                       refresh: true,
                       doRefresh: true,
-                      errorTileUrl: '/app/img/blank_tile.png',
+                      errorTileUrl: 'https://cdn.mol.org/static/images/blank_tile.png',
                       visible: true
                   };
               }
@@ -343,7 +343,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                      opacity: 0.8,
                      refresh: true,
                      doRefresh: true,
-                     errorTileUrl: '/app/img/blank_tile.png',
+                     errorTileUrl: 'https://cdn.mol.org/static/images/blank_tile.png',
                      visible: true,
                      key: result.data.layergroupid,
                      user: 'mol',
@@ -384,7 +384,7 @@ angular.module('mol.location-map',['mol-location-map-templates'])
                   opacity: 1,
                   refresh: true,
                   doRefresh: true,
-                  errorTileUrl: '/app/img/blank_tile.png',
+                  errorTileUrl: 'https://cdn.mol.org/static/images/blank_tile.png',
                   visible: true
               };
           }
