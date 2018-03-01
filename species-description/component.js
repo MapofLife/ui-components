@@ -11,6 +11,7 @@ angular.module('mol.species-description',['mol-species-description-templates'])
       templateUrl: 'mol-species-description-main.html',
       controller: ['$scope','molApi','$translate','$rootScope','$q','$filter',
         function($scope,molApi,$translate,$rootScope,$q, $filter) {
+        $scope.contentMode = 0;
         $scope.model=undefined;
         $scope.canceller = $q.defer();
         // $scope.getDesc = function() {
@@ -45,8 +46,12 @@ angular.module('mol.species-description',['mol-species-description-templates'])
         // }
 
         $scope.getDesc = function() {
+          $scope.contentMode = 1;
           if ($scope.$parent.species && $scope.$parent.species.info) {
             $scope.model = $scope.$parent.species.info[0];
+            $scope.contentMode = 0;
+          } else if ($scope.$parent.species) {
+            $scope.contentMode = 2;
           }
         }
         $rootScope.$on('$translateChangeSuccess',function(e) {$scope.getDesc();});
